@@ -2,8 +2,9 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Authing, Friending, Posting, Sessioning } from "./app";
+import { Authing, Friending, Posting, Rewarding, Sessioning } from "./app";
 import { PostOptions } from "./concepts/posting";
+import { Badge } from "./concepts/rewarding";
 import { SessionDoc } from "./concepts/sessioning";
 import Responses from "./responses";
 
@@ -35,7 +36,11 @@ class Routes {
   @Router.post("/users")
   async createUser(session: SessionDoc, username: string, password: string) {
     Sessioning.isLoggedOut(session);
-    return await Authing.create(username, password);
+    const response = await Authing.create(username, password);
+    if (response.user) {
+      await Rewarding.addUserToUsersBadges(response.user._id);
+    }
+    return response;
   }
 
   @Router.patch("/users/username")
@@ -54,6 +59,7 @@ class Routes {
   async deleteUser(session: SessionDoc) {
     const user = Sessioning.getUser(session);
     Sessioning.end(session);
+    await Rewarding.deleteUserFromUsersBadges(user);
     return await Authing.delete(user);
   }
 
@@ -151,6 +157,52 @@ class Routes {
     const user = Sessioning.getUser(session);
     const fromOid = (await Authing.getUserByUsername(from))._id;
     return await Friending.rejectRequest(fromOid, user);
+  }
+
+  @Router.get("/badges")
+  async getDefinedBadges() {
+    return await Rewarding.getAllDefinedBadges();
+  }
+
+  @Router.post("/badges")
+  async defineBadge(content: Partial<Badge>) {
+    const { name, logo, threshold, hashtags } = content;
+    if (!name || !logo || !threshold) {
+      throw new Error("Missing required fields: name, logo, or threshold.");
+    }
+    return await Rewarding.addBadge(name, logo, threshold, hashtags);
+  }
+
+  @Router.patch("/badges/:badgeId")
+  async updateBadge(badgeId: string, updates: Partial<Badge>) {
+    const oid = new ObjectId(badgeId);
+    return await Rewarding.updateBadge(oid, updates);
+  }
+
+  @Router.delete("/badges/:badgeId")
+  async deleteBadge(badgeId: string) {
+    const oid = new ObjectId(badgeId);
+    return await Rewarding.deleteBadge(oid);
+  }
+
+  @Router.get("/user/:userId/badges")
+  async getUserBadges(userId: string) {
+    const oid = new ObjectId(userId);
+    return await Rewarding.getUserBadges(oid);
+  }
+
+  @Router.post("/user/:userId/badges/:badgeId")
+  async addPoints(userId: string, badgeId: string, pointsToAdd: { points: number }) {
+    if (!pointsToAdd || typeof pointsToAdd.points === "undefined") {
+      throw new Error("Invalid request: 'points' is required in the JSON body.");
+    }
+    const { points } = pointsToAdd;
+    if (!points) {
+      throw new Error("Missing required field points");
+    }
+    const uid = new ObjectId(userId);
+    const bid = new ObjectId(badgeId);
+    return await Rewarding.addPoints(uid, bid, points);
   }
 }
 
