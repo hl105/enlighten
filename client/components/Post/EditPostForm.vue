@@ -4,12 +4,19 @@ import { fetchy } from "../../utils/fetchy";
 import { formatDate } from "../../utils/formatDate";
 
 const props = defineProps(["post"]);
-const content = ref(props.post.content);
+const description = ref(props.post.description);
+const hashtags = ref(props.post.hashtag.join(", "));
+
 const emit = defineEmits(["editPost", "refreshPosts"]);
 
-const editPost = async (content: string) => {
+const editPost = async () => {
   try {
-    await fetchy(`/api/posts/${props.post._id}`, "PATCH", { body: { content: content } });
+    await fetchy(`/api/posts/${props.post._id}`, "PATCH", {
+      body: {
+        description: description.value,
+        hashtags: hashtags.value,
+      },
+    });
   } catch (e) {
     return;
   }
@@ -19,13 +26,21 @@ const editPost = async (content: string) => {
 </script>
 
 <template>
-  <form @submit.prevent="editPost(content)">
+  <form @submit.prevent="editPost">
     <p class="author">{{ props.post.author }}</p>
-    <textarea id="content" v-model="content" placeholder="Create a post!" required> </textarea>
+    <textarea id="description" v-model="description" placeholder="Edit your description..." required></textarea>
+
+    <label for="hashtags">Hashtags (comma-separated):</label>
+    <input id="hashtags" type="text" v-model="hashtags" placeholder="#sky,#observation" />
+
     <div class="base">
       <menu>
-        <li><button class="btn-small pure-button-primary pure-button" type="submit">Save</button></li>
-        <li><button class="btn-small pure-button" @click="emit('editPost')">Cancel</button></li>
+        <li>
+          <button class="btn-small pure-button-primary pure-button" type="submit">Save</button>
+        </li>
+        <li>
+          <button class="btn-small pure-button" @click="emit('editPost')">Cancel</button>
+        </li>
       </menu>
       <p v-if="props.post.dateCreated !== props.post.dateUpdated" class="timestamp">Edited on: {{ formatDate(props.post.dateUpdated) }}</p>
       <p v-else class="timestamp">Created on: {{ formatDate(props.post.dateCreated) }}</p>

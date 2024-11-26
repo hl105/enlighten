@@ -1,60 +1,44 @@
 <script setup lang="ts">
+import { usePostStore } from "@/stores/posts";
+import { onBeforeMount, ref } from "vue";
 import CreatePostForm from "@/components/Post/CreatePostForm.vue";
 import EditPostForm from "@/components/Post/EditPostForm.vue";
 import PostComponent from "@/components/Post/PostComponent.vue";
-import { useUserStore } from "@/stores/user";
-import { fetchy } from "@/utils/fetchy";
-import { storeToRefs } from "pinia";
-import { onBeforeMount, ref } from "vue";
 import SearchPostForm from "./SearchPostForm.vue";
 
-const { isLoggedIn } = storeToRefs(useUserStore());
+const postStore = usePostStore();
 
-const loaded = ref(false);
-let posts = ref<Array<Record<string, string>>>([]);
-let editing = ref("");
-let searchAuthor = ref("");
-
-async function getPosts(author?: string) {
-  let query: Record<string, string> = author !== undefined ? { author } : {};
-  let postResults;
-  try {
-    postResults = await fetchy("/api/posts", "GET", { query });
-  } catch (_) {
-    return;
-  }
-  searchAuthor.value = author ? author : "";
-  posts.value = postResults;
-}
+const editing = ref("");
 
 function updateEditing(id: string) {
   editing.value = id;
 }
 
+function updateSearchParams(params: { author?: string; location?: string; hashtags?: string }) {
+  postStore.filterPosts(params);
+}
+
 onBeforeMount(async () => {
-  await getPosts();
-  loaded.value = true;
+  await postStore.fetchPosts();
 });
 </script>
 
 <template>
-  <section v-if="isLoggedIn">
+  <section>
     <h2>Create a post:</h2>
-    <CreatePostForm @refreshPosts="getPosts" />
+    <CreatePostForm @refreshPosts="postStore.fetchPosts" />
   </section>
   <div class="row">
-    <h2 v-if="!searchAuthor">Posts:</h2>
-    <h2 v-else>Posts by {{ searchAuthor }}:</h2>
-    <SearchPostForm @getPostsByAuthor="getPosts" />
+    <h2>Posts:</h2>
+    <SearchPostForm @updateSearch="updateSearchParams" />
   </div>
-  <section class="posts" v-if="loaded && posts.length !== 0">
-    <article v-for="post in posts" :key="post._id">
-      <PostComponent v-if="editing !== post._id" :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
-      <EditPostForm v-else :post="post" @refreshPosts="getPosts" @editPost="updateEditing" />
+  <section class="posts" v-if="postStore.filteredPosts.length !== 0">
+    <article v-for="post in postStore.filteredPosts" :key="post._id">
+      <PostComponent v-if="editing !== post._id" :post="post" @refreshPosts="postStore.fetchPosts" @editPost="updateEditing" />
+      <EditPostForm v-else :post="post" @refreshPosts="postStore.fetchPosts" @editPost="updateEditing" />
     </article>
   </section>
-  <p v-else-if="loaded">No posts found</p>
-  <p v-else>Loading...</p>
+  <p v-else>No posts found</p>
 </template>
 
 <style scoped>

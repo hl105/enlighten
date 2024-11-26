@@ -9,6 +9,20 @@ import Responses from "./responses";
 import { z } from "zod";
 import { Badge } from "./concepts/rewarding";
 
+import multer from "multer";
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/"); // Ensure this directory exists
+  },
+  filename: function (req, file, cb) {
+    // Use the original filename or generate a unique one
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+const upload = multer({ storage: storage });
+
 /**
  * Web server routes for the app. Implements synchronizations between concepts.
  */
@@ -76,6 +90,19 @@ class Routes {
   }
 
   // Updated Posting routes
+
+  // @Router.post("/upload")
+  // async uploadImage(req: any, res: any) {
+  //   // Since we're using multer, the file will be available in req.file
+  //   if (!req.file) {
+  //     res.status(400).json({ error: "No file uploaded" });
+  //     return;
+  //   }
+  //   // Construct the image URL (adjust based on your setup)
+  //   const imageUrl = `/uploads/${req.file.filename}`;
+  //   res.json({ imageUrl });
+  // }
+
   @Router.post("/posts")
   async createPost(session: SessionDoc, description: string, image: string, location: { x: string; y: string }, hashtags?: string) {
     const user = Sessioning.getUser(session);
@@ -99,10 +126,16 @@ class Routes {
   }
 
   @Router.patch("/posts/:postId")
-  async editPost(session: SessionDoc, postId: string, description: string) {
+  async editPost(session: SessionDoc, postId: string, description: string, hashtags?: string) {
     const user = Sessioning.getUser(session);
     const postObjectId = new ObjectId(postId);
-    await Posting.editPost(user, postObjectId, description);
+
+    let hashtagsArray: string[] = [];
+    if (hashtags) {
+      hashtagsArray = hashtags.split(",").map((tag) => tag.trim());
+    }
+
+    await Posting.editPost(user, postObjectId, description, hashtagsArray);
     return { msg: "Post successfully updated!" };
   }
 
@@ -238,16 +271,6 @@ class Routes {
     const uid = new ObjectId(userId);
     const bid = new ObjectId(badgeId);
     return await Rewarding.addPoints(uid, bid, points);
-  }
-
-  // Helper method to parse value in viewPosts
-  private parseValue(value: string): string | number | { x: number; y: number; maxDistance: number } {
-    try {
-      return JSON.parse(value);
-    } catch (e) {
-      // If parsing fails, return the string as is
-      return value;
-    }
   }
 }
 

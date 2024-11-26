@@ -2,13 +2,50 @@
 import { ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 
-const content = ref("");
+const description = ref("");
+const imageFile = ref<File | null>(null);
+const locationX = ref("");
+const locationY = ref("");
+const hashtags = ref("");
+
 const emit = defineEmits(["refreshPosts"]);
 
-const createPost = async (content: string) => {
+const createPost = async () => {
+  let imageUrl = "";
+  if (imageFile.value) {
+    // Create FormData to upload the image
+    const formData = new FormData();
+    formData.append("image", imageFile.value);
+
+    // Upload the image to the server
+    let response;
+    try {
+      response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+    } catch (error) {
+      alert("Failed to upload image.");
+      return;
+    }
+
+    const data = await response.json();
+    if (!response.ok) {
+      alert(data.error || "Failed to upload image.");
+      return;
+    }
+    imageUrl = data.imageUrl;
+  }
+
+  // Now create the post with the imageUrl
   try {
     await fetchy("/api/posts", "POST", {
-      body: { content },
+      body: {
+        description: description.value,
+        image: imageUrl,
+        location: { x: locationX.value, y: locationY.value },
+        hashtags: hashtags.value,
+      },
     });
   } catch (_) {
     return;
@@ -17,15 +54,41 @@ const createPost = async (content: string) => {
   emptyForm();
 };
 
+const handleFileChange = (e: Event) => {
+  const target = e.target as HTMLInputElement;
+  if (target.files && target.files.length > 0) {
+    imageFile.value = target.files[0];
+  } else {
+    imageFile.value = null;
+  }
+};
+
 const emptyForm = () => {
-  content.value = "";
+  description.value = "";
+  imageFile.value = null;
+  locationX.value = "";
+  locationY.value = "";
+  hashtags.value = "";
 };
 </script>
 
 <template>
-  <form @submit.prevent="createPost(content)">
-    <label for="content">Post Contents:</label>
-    <textarea id="content" v-model="content" placeholder="Create a post!" required> </textarea>
+  <form @submit.prevent="createPost" enctype="multipart/form-data">
+    <label for="description">Description:</label>
+    <textarea id="description" v-model="description" placeholder="Describe your post..." required></textarea>
+
+    <label for="image">Upload Image:</label>
+    <input id="image" type="file" @change="handleFileChange" accept="image/*" />
+
+    <label for="locationX">Location X:</label>
+    <input id="locationX" type="number" v-model="locationX" placeholder="Longitude" />
+
+    <label for="locationY">Location Y:</label>
+    <input id="locationY" type="number" v-model="locationY" placeholder="Latitude" />
+
+    <label for="hashtags">Hashtags (comma-separated):</label>
+    <input id="hashtags" type="text" v-model="hashtags" placeholder="#sky,#observation" />
+
     <button type="submit" class="pure-button-primary pure-button">Create Post</button>
   </form>
 </template>
@@ -40,12 +103,16 @@ form {
   padding: 1em;
 }
 
-textarea {
+textarea,
+input {
   font-family: inherit;
   font-size: inherit;
-  height: 6em;
   padding: 0.5em;
   border-radius: 4px;
+}
+
+textarea {
+  height: 6em;
   resize: none;
 }
 </style>

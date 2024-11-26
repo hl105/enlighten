@@ -74,38 +74,14 @@ export default class PostingConcept {
   /**
    * Edits a post's description.
    */
-  async editPost(user: ObjectId, postId: ObjectId, description: string) {
+  async editPost(user: ObjectId, postId: ObjectId, description: string, hashtags: string[] = []) {
     await this.assertAuthorIsUser(postId, user);
-    const hashtags = this.extractHashtags(description);
-    await this.posts.partialUpdateOne({ _id: postId }, { description, hashtag: hashtags });
+    const extractedHashtags = this.extractHashtags(description);
+    const combinedHashtags = Array.from(new Set([...extractedHashtags, ...hashtags]));
+
+    await this.posts.partialUpdateOne({ _id: postId }, { description, hashtag: combinedHashtags });
     return { msg: "Post successfully updated!" };
   }
-
-  /**
-   * Returns a list of posts where Post[key] equals value.
-   */
-  // async viewPosts(key: string, value: string | number | { x: number; y: number; maxDistance: number }) {
-  //   let query = {};
-  //   if (key === "location") {
-  //     // Value should be an object { x, y, maxDistance }
-  //     const { x, y, maxDistance } = value as {
-  //       x: number;
-  //       y: number;
-  //       maxDistance: number;
-  //     };
-  //     query = {
-  //       location: {
-  //         $near: {
-  //           $geometry: { type: "Point", coordinates: [x, y] },
-  //           $maxDistance: maxDistance,
-  //         },
-  //       },
-  //     };
-  //   } else {
-  //     query = { [key]: value };
-  //   }
-  //   return await this.posts.readMany(query);
-  // }
 
   /**
    * Returns the number of likes for a post.
@@ -169,11 +145,11 @@ export default class PostingConcept {
   }
 
   /**
-   * Retrieves all posts, sorted by boost and creation time.
+   * Retrieves posts based on provided filters.
    */
-  async getPosts() {
-    // Returns all posts, sorted for better client performance
-    return await this.posts.readMany({}, { sort: { boost: -1, _id: -1 } });
+  async getPosts(filters: any = {}) {
+    // Returns posts matching the filters, sorted for better client performance
+    return await this.posts.readMany(filters, { sort: { boost: -1, _id: -1 } });
   }
 
   /**

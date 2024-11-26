@@ -2,14 +2,26 @@
 import { ref } from "vue";
 
 const author = ref("");
-const emit = defineEmits(["getPostsByAuthor"]);
+const location = ref("");
+const hashtags = ref("");
+const emit = defineEmits(["updateSearch"]);
+
+const submitSearch = () => {
+  emit("updateSearch", {
+    author: author.value,
+    location: location.value,
+    hashtags: hashtags.value,
+  });
+};
 </script>
 
 <template>
-  <form @submit.prevent="emit('getPostsByAuthor', author)" class="pure-form">
+  <form @submit.prevent="submitSearch" class="pure-form">
     <fieldset>
-      <legend>Search by Author</legend>
-      <input id="author" type="text" v-model="author" placeholder="Username" />
+      <legend>Search Posts</legend>
+      <input id="author" type="text" v-model="author" placeholder="Author Username" />
+      <input id="location" type="text" v-model="location" placeholder="Location (x,y)" />
+      <input id="hashtags" type="text" v-model="hashtags" placeholder="Hashtags (comma-separated)" />
       <button type="submit" class="pure-button pure-button-primary">Search</button>
     </fieldset>
   </form>
