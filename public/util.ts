@@ -1,5 +1,5 @@
 type HttpMethod = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
-type InputTag = "input" | "textarea" | "json";
+type InputTag = "input" | "textarea" | "json" | "number";
 type Field = InputTag | { [key: string]: Field };
 type Fields = Record<string, Field>;
 
@@ -56,6 +56,45 @@ const operations: Operation[] = [
     method: "GET",
     fields: { username: "input" },
   },
+  // Posting operations
+  {
+    name: "Create Post",
+    endpoint: "/api/posts",
+    method: "POST",
+    fields: {
+      description: "textarea",
+      image: "input",
+      location: {
+        x: "input",
+        y: "input",
+      },
+      hashtags: "input",
+    },
+  },
+  {
+    name: "Delete Post",
+    endpoint: "/api/posts/:postId",
+    method: "DELETE",
+    fields: { postId: "input" },
+  },
+  {
+    name: "Edit Post",
+    endpoint: "/api/posts/:postId",
+    method: "PATCH",
+    fields: {
+      postId: "input",
+      description: "textarea",
+    },
+  },
+  // {
+  //   name: "View Posts",
+  //   endpoint: "/api/posts",
+  //   method: "GET",
+  //   fields: {
+  //     key: "input",
+  //     value: "json",
+  //   },
+  // },
   {
     name: "Get Posts (empty for all)",
     endpoint: "/api/posts",
@@ -63,23 +102,24 @@ const operations: Operation[] = [
     fields: { author: "input" },
   },
   {
-    name: "Create Post",
-    endpoint: "/api/posts",
+    name: "Get Likes",
+    endpoint: "/api/posts/:postId/likes",
+    method: "GET",
+    fields: { postId: "input" },
+  },
+  {
+    name: "Boost Post",
+    endpoint: "/api/posts/:postId/boost",
     method: "POST",
-    fields: { content: "input" },
+    fields: { postId: "input" },
   },
   {
-    name: "Update Post",
-    endpoint: "/api/posts/:id",
-    method: "PATCH",
-    fields: { id: "input", content: "input", options: { backgroundColor: "input" } },
+    name: "Get Hashtags",
+    endpoint: "/api/posts/:postId/hashtags",
+    method: "GET",
+    fields: { postId: "input" },
   },
-  {
-    name: "Delete Post",
-    endpoint: "/api/posts/:id",
-    method: "DELETE",
-    fields: { id: "input" },
-  },
+
   {
     name: "Get Defined Badges",
     endpoint: "/api/badges",

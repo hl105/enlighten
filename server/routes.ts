@@ -3,12 +3,11 @@ import { ObjectId } from "mongodb";
 import { Router, getExpressRouter } from "./framework/router";
 
 import { Authing, Friending, Posting, Rewarding, Sessioning } from "./app";
-import { PostOptions } from "./concepts/posting";
-import { Badge } from "./concepts/rewarding";
 import { SessionDoc } from "./concepts/sessioning";
 import Responses from "./responses";
 
 import { z } from "zod";
+import { Badge } from "./concepts/rewarding";
 
 /**
  * Web server routes for the app. Implements synchronizations between concepts.
@@ -76,6 +75,44 @@ class Routes {
     return { msg: "Logged out!" };
   }
 
+  // Updated Posting routes
+  @Router.post("/posts")
+  async createPost(session: SessionDoc, description: string, image: string, location: { x: string; y: string }, hashtags?: string) {
+    const user = Sessioning.getUser(session);
+    const loc = { x: parseFloat(location.x), y: parseFloat(location.y) };
+    let hashtagsArray: string[] = [];
+
+    if (hashtags) {
+      // Split the hashtags string into an array
+      hashtagsArray = hashtags.split(",").map((tag) => tag.trim());
+    }
+    const created = await Posting.createPost(user, description, image, loc, hashtagsArray);
+    return { msg: created.msg, postId: created.postId };
+  }
+
+  @Router.delete("/posts/:postId")
+  async deletePost(session: SessionDoc, postId: string) {
+    const user = Sessioning.getUser(session);
+    const postObjectId = new ObjectId(postId);
+    await Posting.deletePost(user, postObjectId);
+    return { msg: "Post deleted successfully!" };
+  }
+
+  @Router.patch("/posts/:postId")
+  async editPost(session: SessionDoc, postId: string, description: string) {
+    const user = Sessioning.getUser(session);
+    const postObjectId = new ObjectId(postId);
+    await Posting.editPost(user, postObjectId, description);
+    return { msg: "Post successfully updated!" };
+  }
+
+  // @Router.get("/posts")
+  // async viewPosts(key: string, value: string) {
+  //   const parsedValue = this.parseValue(value);
+  //   const posts = await Posting.viewPosts(key, parsedValue);
+  //   return Responses.posts(posts);
+  // }
+
   @Router.get("/posts")
   @Router.validate(z.object({ author: z.string().optional() }))
   async getPosts(author?: string) {
@@ -89,27 +126,25 @@ class Routes {
     return Responses.posts(posts);
   }
 
-  @Router.post("/posts")
-  async createPost(session: SessionDoc, content: string, options?: PostOptions) {
-    const user = Sessioning.getUser(session);
-    const created = await Posting.create(user, content, options);
-    return { msg: created.msg, post: await Responses.post(created.post) };
+  @Router.get("/posts/:postId/likes")
+  async getLikes(postId: string) {
+    const postObjectId = new ObjectId(postId);
+    const likes = await Posting.getLikes(postObjectId);
+    return { likes };
   }
 
-  @Router.patch("/posts/:id")
-  async updatePost(session: SessionDoc, id: string, content?: string, options?: PostOptions) {
-    const user = Sessioning.getUser(session);
-    const oid = new ObjectId(id);
-    await Posting.assertAuthorIsUser(oid, user);
-    return await Posting.update(oid, content, options);
+  @Router.post("/posts/:postId/boost")
+  async boostPost(postId: string) {
+    const postObjectId = new ObjectId(postId);
+    await Posting.boostPost(postObjectId);
+    return { msg: "Post boosted successfully!" };
   }
 
-  @Router.delete("/posts/:id")
-  async deletePost(session: SessionDoc, id: string) {
-    const user = Sessioning.getUser(session);
-    const oid = new ObjectId(id);
-    await Posting.assertAuthorIsUser(oid, user);
-    return Posting.delete(oid);
+  @Router.get("/posts/:postId/hashtags")
+  async getHashtags(postId: string) {
+    const postObjectId = new ObjectId(postId);
+    const hashtags = await Posting.getHashtags(postObjectId);
+    return { hashtags };
   }
 
   @Router.get("/friends")
@@ -203,6 +238,16 @@ class Routes {
     const uid = new ObjectId(userId);
     const bid = new ObjectId(badgeId);
     return await Rewarding.addPoints(uid, bid, points);
+  }
+
+  // Helper method to parse value in viewPosts
+  private parseValue(value: string): string | number | { x: number; y: number; maxDistance: number } {
+    try {
+      return JSON.parse(value);
+    } catch (e) {
+      // If parsing fails, return the string as is
+      return value;
+    }
   }
 }
 

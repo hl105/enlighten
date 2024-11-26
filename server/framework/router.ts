@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable unused-imports/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unsafe-function-type */
 import express, { Request, Response } from "express";
 import "reflect-metadata";
 
