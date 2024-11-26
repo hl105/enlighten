@@ -38,7 +38,6 @@ const locationString = props.post.location ? `Location: (${props.post.location.c
   <p>Likes: {{ props.post.likes }}</p>
   <div class="base">
     <menu>
-      <li><button class="btn-small pure-button" @click="boostPost">Boost</button></li>
       <li v-if="props.post.author == currentUsername">
         <button class="btn-small pure-button" @click="emit('editPost', props.post._id)">Edit</button>
       </li>
