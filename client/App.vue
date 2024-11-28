@@ -3,9 +3,9 @@ import router from "@/router";
 import { useToastStore } from "@/stores/toast";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
-import { onBeforeMount, onMounted, onUnmounted, ref } from "vue";
+import { onBeforeMount, onMounted, onUnmounted, ref, computed } from "vue";
 
-// const currentRouteName = computed(() => router.currentRoute.value.name);
+const currentRouteName = computed(() => router.currentRoute.value.name);
 const userStore = useUserStore();
 const { isLoggedIn } = storeToRefs(userStore);
 const { toast } = storeToRefs(useToastStore());
@@ -50,7 +50,7 @@ const navigateTo = async (viewName: string) => {
 <template>
   <header>
     <!-- Navbar -->
-    <nav>
+    <nav v-if="currentRouteName !== 'Login'">
       <!-- Hamburger Icon -->
       <div class="hamburger" @click="toggleSidebar">☰</div>
 
@@ -62,7 +62,7 @@ const navigateTo = async (viewName: string) => {
     </nav>
 
     <!-- Sidebar -->
-    <aside class="sidebar" v-if="isSidebarVisible">
+    <aside class="sidebar" v-if="isSidebarVisible && currentRouteName !== 'Login'">
       <ul>
         <li @click="navigateTo('Map')">Map</li>
         <li @click="navigateTo('Posts')">Posts</li>

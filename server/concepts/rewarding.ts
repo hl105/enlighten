@@ -140,11 +140,32 @@ export default class RewardingConcept {
   }
 
   /**
-   * Get list of badgeProgresses user has started
+   * Get list of badgeProgresses user has started and returns two lists:
+   * EarnedBages = [badge, ...]
+   * notEarnedadges  = [[badge, pointsLeft],...]
    */
   async getUserBadges(userId: ObjectId) {
+    const earnedBadges = [];
+    const notEarnedBadges = [];
     const existingUserBadges = await this.usersBadges.readOne({ userId });
-    return existingUserBadges?.badges;
+    const response = existingUserBadges?.badges;
+    if (!response) {
+      return { msg: "No User Badges found", earnedBadges: [], notEarnedBadges: [] };
+    }
+    for (const badgeStatus of response) {
+      const badge = await this.getBadge(badgeStatus.badgeId); // Fetch badge details
+      if (!badge) {
+        return { msg: "Badge does not exist!", earnedBadges: [], notEarnedBadges: [] };
+      }
+      if (!badgeStatus.earned) {
+        const pointsLeft = badge.threshold - badgeStatus.points;
+        const bg = [badge, pointsLeft];
+        notEarnedBadges.push(bg);
+      } else {
+        earnedBadges.push(badge);
+      }
+    }
+    return { msg: "Successfully got user badges", earnedBadges: earnedBadges, notEarnedBadges: notEarnedBadges };
   }
 
   /**

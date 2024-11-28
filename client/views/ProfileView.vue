@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import PostComponent from "@/components/Post/PostComponent.vue";
+import UserBadges from "@/components/Reward/UserBadges.vue";
 import router from "@/router";
 import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
-// import UpdateUserForm from "../components/Setting/UpdateUserForm.vue";
 
 interface Post {
   _id: string;
@@ -49,8 +49,13 @@ onMounted(async () => {
       </div>
     </div>
     <!--badges will go here-->
+    <UserBadges></UserBadges>
+
     <div class="posts">
-      <PostComponent v-for="post in posts" :key="post._id" :post="post" @refreshPosts="fetchUserPosts" class="post" />
+      <h2>Posts</h2>
+      <div class="post-grid">
+        <PostComponent v-for="post in posts" :key="post._id" :post="post" @refreshPosts="fetchUserPosts" class="post" />
+      </div>
     </div>
   </main>
 </template>
@@ -90,10 +95,15 @@ h1 {
   background-color: white;
 }
 
-/* Posts Section */
 .posts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.post-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Responsive grid */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5em;
   margin: 2em auto;
   padding: 1em;

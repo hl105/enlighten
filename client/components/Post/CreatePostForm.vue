@@ -50,9 +50,9 @@ const createPost = async () => {
         hashtags: hashtags.value,
       },
     });
-
-    earned.value = response.earned;
-    started.value = response.started;
+    // for rewarding badges
+    earned.value = response.earned; // user earned a badge
+    started.value = response.started; // user started a new badge
   } catch (error) {
     console.error("Something went wrong when posting", error);
   }

@@ -29,10 +29,6 @@ const toggleForm = () => {
         {{ showRegisterForm ? "Back to Login" : "Create New User" }}
       </button>
     </section>
-
-    <section v-else class="logged-in">
-      <h1>Welcome, {{ currentUsername }}!</h1>
-    </section>
   </main>
 </template>
 

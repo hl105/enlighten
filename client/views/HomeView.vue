@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { useUserStore } from "@/stores/user";
 
-const { currentUsername } = useUserStore();
+const userStore = useUserStore();
 </script>
 
 <template>
   <main>
     <section>
       <div class="logged-in">
-        <h1>Welcome, {{ currentUsername }}!</h1>
+        <h1>Welcome, {{ userStore.currentUsername }}!</h1>
       </div>
     </section>
   </main>

@@ -10,6 +10,7 @@ import { z } from "zod";
 import { Badge } from "./concepts/rewarding";
 
 import multer from "multer";
+import { response } from "express";
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -268,37 +269,10 @@ class Routes {
     return await Rewarding.deleteBadge(oid);
   }
 
-  @Router.get("/user/:userId/badges")
-  async getUserBadges(userId: string) {
-    try {
-      const oid = new ObjectId(userId);
-      // Get the user's badge statuses
-      const response = await Rewarding.getUserBadges(oid);
-      // Initialize arrays for earned and not earned badges
-      const earnedBadges = [];
-      const notEarnedBadges = [];
-      // Iterate through badge statuses
-      if (!response) {
-        return;
-      }
-      for (const badgeStatus of response) {
-        const badge = await Rewarding.getBadge(badgeStatus.badgeId); // Fetch badge details
-        if (badgeStatus.earned) {
-          earnedBadges.push(badge);
-        } else {
-          notEarnedBadges.push(badge);
-        }
-      }
-
-      // Return both earned and not earned badges ()
-      return {
-        earnedBadges,
-        notEarnedBadges,
-      };
-    } catch (error) {
-      console.error("Error fetching user badges:", error);
-      throw new Error("Unable to fetch user badges");
-    }
+  @Router.get("/user/:username/badges")
+  async getUserBadges(username: string) {
+    const user = await Authing.getUserByUsername(username);
+    return await Rewarding.getUserBadges(user._id);
   }
 
   @Router.post("/user/:userId/badges/:badgeId")
