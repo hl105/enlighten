@@ -1,12 +1,15 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
+import UnlockedComponent from "../Reward/UnlockedComponent.vue";
 
 const description = ref("");
 const imageFile = ref<File | null>(null);
 const locationX = ref("");
 const locationY = ref("");
 const hashtags = ref("");
+const earned = ref<string | null>(null);
+const started = ref<string | null>(null);
 
 const emit = defineEmits(["refreshPosts"]);
 
@@ -39,7 +42,7 @@ const createPost = async () => {
 
   // Now create the post with the imageUrl
   try {
-    await fetchy("/api/posts", "POST", {
+    const response = await fetchy("/api/posts", "POST", {
       body: {
         description: description.value,
         image: imageUrl,
@@ -47,8 +50,11 @@ const createPost = async () => {
         hashtags: hashtags.value,
       },
     });
-  } catch (_) {
-    return;
+
+    earned.value = response.earned;
+    started.value = response.started;
+  } catch (error) {
+    console.error("Something went wrong when posting", error);
   }
   emit("refreshPosts");
   emptyForm();
@@ -91,6 +97,8 @@ const emptyForm = () => {
 
     <button type="submit" class="pure-button-primary pure-button">Create Post</button>
   </form>
+  <!-- Display the UnlockedComponent if earned or started conditions are met -->
+  <UnlockedComponent v-if="earned === 'updated' || started === 'start new badge'" :earned="earned" :started="started" />
 </template>
 
 <style scoped>

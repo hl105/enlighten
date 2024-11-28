@@ -30,3 +30,14 @@ a.button {
   align-items: center;
   gap: 1em;
 }
+
+@font-face {
+  font-family: 'Catalina';
+  src: url("@/assets/Catallina.otf") format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+h1, li {
+  font-family: 'Catalina', sans-serif;
+}

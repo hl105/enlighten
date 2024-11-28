@@ -95,6 +95,19 @@ export default class PostingConcept {
   }
 
   /**
+   * change the number of likes for a post by param
+   */
+  async changePostNumLikes(postId: ObjectId, num: number) {
+    const post = await this.posts.readOne({ _id: postId });
+    if (!post) {
+      throw new NotFoundError(`Post ${postId} does not exist!`);
+    }
+    const newLikes = post.likes + num;
+    await this.posts.partialUpdateOne({ _id: postId }, { likes: newLikes });
+    return newLikes;
+  }
+
+  /**
    * Boosts a post by moving it earlier in the posts by 2 spots.
    */
   async boostPost(postId: ObjectId) {

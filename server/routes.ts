@@ -114,7 +114,14 @@ class Routes {
       hashtagsArray = hashtags.split(",").map((tag) => tag.trim());
     }
     const created = await Posting.createPost(user, description, image, loc, hashtagsArray);
-    return { msg: created.msg, postId: created.postId };
+    const stargazerBadge = new ObjectId("6747e3736bb51059bcc33fd6"); // id of stargazer badge (given for posting)
+    const response = await Rewarding.addPoints(user, stargazerBadge, 5); // 5 points for testing purposes for now
+    const responseHashtag = await Rewarding.addPointsHashtag(user, hashtagsArray);
+
+    const earned = response.earned === "updated" || responseHashtag.earned === "updated" ? "updated" : "no change";
+    const started = response.started === "start new badge" || responseHashtag.started === "start new badge" ? "start new badge" : "no change";
+
+    return { msg: created.msg, postId: created.postId, earned: earned, started: started };
   }
 
   @Router.delete("/posts/:postId")
@@ -146,7 +153,7 @@ class Routes {
   //   return Responses.posts(posts);
   // }
 
-  @Router.get("/posts")
+  @Router.get("/posts/:author?")
   @Router.validate(z.object({ author: z.string().optional() }))
   async getPosts(author?: string) {
     let posts;
@@ -166,6 +173,14 @@ class Routes {
     return { likes };
   }
 
+  @Router.post("/posts/:postId/likes")
+  async changePostNumLikes(postId: string, num: number) {
+    const postObjectId = new ObjectId(postId);
+    const likes = await Posting.changePostNumLikes(postObjectId, num);
+    return { likes };
+  }
+
+  // might not need?
   @Router.post("/posts/:postId/boost")
   async boostPost(postId: string) {
     const postObjectId = new ObjectId(postId);
@@ -255,8 +270,35 @@ class Routes {
 
   @Router.get("/user/:userId/badges")
   async getUserBadges(userId: string) {
-    const oid = new ObjectId(userId);
-    return await Rewarding.getUserBadges(oid);
+    try {
+      const oid = new ObjectId(userId);
+      // Get the user's badge statuses
+      const response = await Rewarding.getUserBadges(oid);
+      // Initialize arrays for earned and not earned badges
+      const earnedBadges = [];
+      const notEarnedBadges = [];
+      // Iterate through badge statuses
+      if (!response) {
+        return;
+      }
+      for (const badgeStatus of response) {
+        const badge = await Rewarding.getBadge(badgeStatus.badgeId); // Fetch badge details
+        if (badgeStatus.earned) {
+          earnedBadges.push(badge);
+        } else {
+          notEarnedBadges.push(badge);
+        }
+      }
+
+      // Return both earned and not earned badges
+      return {
+        earnedBadges,
+        notEarnedBadges,
+      };
+    } catch (error) {
+      console.error("Error fetching user badges:", error);
+      throw new Error("Unable to fetch user badges");
+    }
   }
 
   @Router.post("/user/:userId/badges/:badgeId")

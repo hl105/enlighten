@@ -21,7 +21,7 @@ export interface UserBadgesDoc extends BaseDoc {
   badges: BadgeProgress[];
 }
 
-/**
+/** "../../client/assets/badges"
  * Concept: Rewarding [User, Post]
  */
 export default class RewardingConcept {
@@ -41,6 +41,8 @@ export default class RewardingConcept {
    * if badge does not exist in user's badgeProcess, add it
    */
   async addPoints(userId: ObjectId, badgeId: ObjectId, pointsToAdd: number) {
+    let earnedMessage = "no change";
+    let startedMessage = "no change";
     const userBadges = await this.usersBadges.readOne({ userId });
     const badgeProgress = userBadges?.badges.find((b) => b.badgeId.toString() === badgeId.toString());
 
@@ -58,6 +60,7 @@ export default class RewardingConcept {
       badgeProgress.points += pointsToAdd;
       if (!badgeProgress.earned && badgeProgress.points >= badge.threshold) {
         badgeProgress.earned = true;
+        earnedMessage = "updated";
       }
     } else {
       // user starts badge for the first time
@@ -66,11 +69,12 @@ export default class RewardingConcept {
         points: pointsToAdd,
         earned: false,
       });
+      startedMessage = "start new badge";
     }
 
     await this.usersBadges.partialUpdateOne({ userId }, { badges: userBadges.badges });
 
-    return { msg: "Points added and badge progress updated!" };
+    return { msg: "Points added and badge progress updated!", earned: earnedMessage, started: startedMessage };
   }
 
   /**
@@ -79,13 +83,21 @@ export default class RewardingConcept {
    * @param hashtags list of hashtags from post
    */
   async addPointsHashtag(userId: ObjectId, hashtags: string[]) {
+    let earnedMessage = "no change";
+    let startedMessage = "no change";
     for (const hashtag of hashtags) {
       const relatedBadges = await this.badgeDefinitions.readMany({ hashtags: hashtag });
       for (const badge of relatedBadges) {
-        await this.addPoints(userId, badge._id, 1);
+        const response = await this.addPoints(userId, badge._id, 1);
+        if (response.earned === "updated") {
+          earnedMessage = "updated";
+        }
+        if (response.started === "start new badge") {
+          startedMessage = "start new badge";
+        }
       }
     }
-    return { msg: "Points added based on hashtags!" };
+    return { msg: "Points added based on hashtags!", earned: earnedMessage, started: startedMessage };
   }
 
   /**
@@ -93,6 +105,13 @@ export default class RewardingConcept {
    */
   async getAllDefinedBadges() {
     return this.badgeDefinitions.readMany({});
+  }
+
+  /**
+   * Get badge by badgeId
+   */
+  async getBadge(badgeId: ObjectId) {
+    return this.badgeDefinitions.readOne(badgeId);
   }
 
   /**

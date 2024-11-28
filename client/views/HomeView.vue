@@ -1,24 +1,22 @@
 <script setup lang="ts">
-import PostListComponent from "@/components/Post/PostListComponent.vue";
 import { useUserStore } from "@/stores/user";
-import { storeToRefs } from "pinia";
 
-const { currentUsername, isLoggedIn } = storeToRefs(useUserStore());
+const { currentUsername } = useUserStore();
 </script>
 
 <template>
   <main>
-    <h1>Home Page</h1>
     <section>
-      <h1 v-if="isLoggedIn">Welcome {{ currentUsername }}!</h1>
-      <h1 v-else>Please login!</h1>
+      <div class="logged-in">
+        <h1>Welcome, {{ currentUsername }}!</h1>
+      </div>
     </section>
-    <PostListComponent />
   </main>
 </template>
 
 <style scoped>
-h1 {
+.logged-in {
   text-align: center;
+  margin-top: 2rem;
 }
 </style>
