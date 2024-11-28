@@ -1,6 +1,6 @@
 # 6.1040 Social Media Frontend Starter Code
 
-## Getting Started
+## Getting Started.
 
 If you are using VSCode/VSCodium, install the ESLint and Prettier extensions.
 The project is already configured to use ESLint and Prettier,
