@@ -290,7 +290,7 @@ class Routes {
         }
       }
 
-      // Return both earned and not earned badges
+      // Return both earned and not earned badges ()
       return {
         earnedBadges,
         notEarnedBadges,
