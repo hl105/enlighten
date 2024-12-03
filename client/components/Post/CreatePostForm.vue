@@ -84,10 +84,10 @@ const emptyForm = () => {
     <input id="image" type="file" @change="handleFileChange" accept="image/*" />
 
     <label for="locationX">Location X:</label>
-    <input id="locationX" type="number" v-model="locationX" placeholder="Longitude" />
+    <input id="locationX" type="number" step="any" v-model="locationX" placeholder="Longitude" />
 
     <label for="locationY">Location Y:</label>
-    <input id="locationY" type="number" v-model="locationY" placeholder="Latitude" />
+    <input id="locationY" type="number" step="any" v-model="locationY" placeholder="Latitude" />
 
     <label for="hashtags">Hashtags (comma-separated):</label>
     <input id="hashtags" type="text" v-model="hashtags" placeholder="#sky,#observation" />
