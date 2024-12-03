@@ -15,6 +15,10 @@ mapboxgl.accessToken = "pk.eyJ1IjoiY2hhcHUxMCIsImEiOiJjbTQzZW9tbGwwYWExMmtwczJ6O
 
 const heatmapLayerId = "heatmap-layer";  // Unique ID for the heatmap layer
 const heatmapVisible = ref(false);  // Store heatmap visibility state
+// Function to construct image URL
+const getImageUrl = (imageId: string) => {
+  return `/api/images/${imageId}`;
+};
 
 onMounted(async () => {
   // Fetch posts if not already loaded
@@ -45,7 +49,7 @@ onMounted(async () => {
           <p><strong>Description:</strong> ${post.description}</p>
           ${
             post.image
-              ? `<img src="${post.image}" alt="Post image" style="width:100%;border-radius:8px;"/>`
+              ? `<img src="${getImageUrl(post.image)}" alt="Post image" style="width:100%;border-radius:8px;"/>`
               : ""
           }
           <p><strong>Hashtags:</strong> ${post.hashtag.join(", ")}</p>
