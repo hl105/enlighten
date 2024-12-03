@@ -14,13 +14,11 @@ const started = ref<string | null>(null);
 const emit = defineEmits(["refreshPosts"]);
 
 const createPost = async () => {
-  let imageUrl = "";
+  let imageId = "";
   if (imageFile.value) {
-    // Create FormData to upload the image
     const formData = new FormData();
     formData.append("image", imageFile.value);
 
-    // Upload the image to the server
     let response;
     try {
       response = await fetch("/api/upload", {
@@ -37,22 +35,21 @@ const createPost = async () => {
       alert(data.error || "Failed to upload image.");
       return;
     }
-    imageUrl = data.imageUrl;
+    imageId = data.imageId;
   }
 
-  // Now create the post with the imageUrl
   try {
     const response = await fetchy("/api/posts", "POST", {
       body: {
         description: description.value,
-        image: imageUrl,
+        imageId: imageId, // Use imageId
         location: { x: locationX.value, y: locationY.value },
         hashtags: hashtags.value,
       },
     });
-    // for rewarding badges
-    earned.value = response.earned; // user earned a badge
-    started.value = response.started; // user started a new badge
+
+    earned.value = response.earned;
+    started.value = response.started;
   } catch (error) {
     console.error("Something went wrong when posting", error);
   }

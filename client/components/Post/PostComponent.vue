@@ -18,23 +18,21 @@ const deletePost = async () => {
   emit("refreshPosts");
 };
 
-// const boostPost = async () => {
-//   try {
-//     await fetchy(`/api/posts/${props.post._id}/boost`, "POST");
-//   } catch {
-//     return;
-//   }
-//   emit("refreshPosts");
-// };
-
 const locationString = props.post.location ? `Location: (${props.post.location.coordinates[0]}, ${props.post.location.coordinates[1]})` : "Location: Not specified";
+
+// Function to construct image URL
+const getImageUrl = (imageId: string) => {
+  return `/api/images/${imageId}`;
+};
 </script>
 
 <template>
   <div class="post-container">
     <p class="author">{{ props.post.author }}</p>
     <p class="post-content">{{ props.post.description }}</p>
-    <p v-if="props.post.image">Image: <img :src="props.post.image" alt="Post image" /></p>
+    <p v-if="props.post.image">
+      <img :src="getImageUrl(props.post.image)" alt="Post image" />
+    </p>
     <p>{{ locationString }}</p>
     <p v-if="props.post.hashtag.length">Hashtags: {{ props.post.hashtag.join(", ") }}</p>
     <LikeComponent :postId="props.post._id" />
@@ -56,7 +54,6 @@ const locationString = props.post.location ? `Location: (${props.post.location.c
 </template>
 
 <style scoped>
-/* Same styles as before, with added styles for the image if needed */
 img {
   max-width: 100%;
   height: auto;

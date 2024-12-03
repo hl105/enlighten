@@ -5,7 +5,7 @@ import { NotAllowedError, NotFoundError } from "./errors";
 export interface PostDoc extends BaseDoc {
   author: ObjectId;
   description: string;
-  image: string;
+  image: ObjectId;
   location: {
     type: "Point";
     coordinates: [number, number];
@@ -36,7 +36,7 @@ export default class PostingConcept {
   /**
    * Creates a post and returns the postId.
    */
-  async createPost(author: ObjectId, description: string, image: string, location: { x: number; y: number }, hashtags: string[] = []) {
+  async createPost(author: ObjectId, description: string, imageId: ObjectId, location: { x: number; y: number }, hashtags: string[] = []) {
     // Use provided hashtags or extract from description
     const extractedHashtags = this.extractHashtags(description);
     const combinedHashtags = Array.from(new Set([...extractedHashtags, ...hashtags]));
@@ -44,7 +44,7 @@ export default class PostingConcept {
     const postDoc: Omit<PostDoc, "_id" | "dateCreated" | "dateUpdated"> = {
       author,
       description,
-      image,
+      image: imageId,
       hashtag: combinedHashtags,
       likes: 0,
       posts: [],

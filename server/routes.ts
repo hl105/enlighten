@@ -10,20 +10,6 @@ import { z } from "zod";
 import { Badge } from "./concepts/rewarding";
 
 import multer from "multer";
-import { response } from "express";
-
-// Configure multer for file uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/"); // Ensure this directory exists
-  },
-  filename: function (req, file, cb) {
-    // Use the original filename or generate a unique one
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
-const upload = multer({ storage: storage });
-
 /**
  * Web server routes for the app. Implements synchronizations between concepts.
  */
@@ -92,20 +78,8 @@ class Routes {
 
   // Updated Posting routes
 
-  // @Router.post("/upload")
-  // async uploadImage(req: any, res: any) {
-  //   // Since we're using multer, the file will be available in req.file
-  //   if (!req.file) {
-  //     res.status(400).json({ error: "No file uploaded" });
-  //     return;
-  //   }
-  //   // Construct the image URL (adjust based on your setup)
-  //   const imageUrl = `/uploads/${req.file.filename}`;
-  //   res.json({ imageUrl });
-  // }
-
   @Router.post("/posts")
-  async createPost(session: SessionDoc, description: string, image: string, location: { x: string; y: string }, hashtags?: string) {
+  async createPost(session: SessionDoc, description: string, imageId: string, location: { x: string; y: string }, hashtags?: string) {
     const user = Sessioning.getUser(session);
     const loc = { x: parseFloat(location.x), y: parseFloat(location.y) };
     let hashtagsArray: string[] = [];
@@ -114,7 +88,8 @@ class Routes {
       // Split the hashtags string into an array
       hashtagsArray = hashtags.split(",").map((tag) => tag.trim());
     }
-    const created = await Posting.createPost(user, description, image, loc, hashtagsArray);
+    const imageObjectId = new ObjectId(imageId);
+    const created = await Posting.createPost(user, description, imageObjectId, loc, hashtagsArray);
     const stargazerBadge = new ObjectId("6747e3736bb51059bcc33fd6"); // id of stargazer badge (given for posting)
     const response = await Rewarding.addPoints(user, stargazerBadge, 5); // 5 points for testing purposes for now
     const responseHashtag = await Rewarding.addPointsHashtag(user, hashtagsArray);
