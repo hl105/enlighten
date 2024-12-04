@@ -21,9 +21,16 @@ const toggleForm = () => {
     </div>
 
     <section v-if="!isLoggedIn" class="login-container">
-      <h1>Welcome to Enlighten</h1>
-      <LoginForm v-if="!showRegisterForm" class="login-form" />
-      <RegisterForm v-else />
+      <div v-if="!showRegisterForm" class="form-container">
+        <h1>Welcome Back!</h1>
+        <LoginForm />
+        <div>Don't have an account?</div>
+      </div>
+      <div v-else class="form-container">
+        <h1>Welcome to Konnect!</h1>
+        <RegisterForm />
+        <div>Yes I have an account?</div>
+      </div>
 
       <button @click="toggleForm" class="toggle-form-button">
         {{ showRegisterForm ? "Back to Login" : "Create New User" }}

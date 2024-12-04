@@ -3,7 +3,7 @@ import router from "@/router";
 import { useToastStore } from "@/stores/toast";
 import { useUserStore } from "@/stores/user";
 import { storeToRefs } from "pinia";
-import { onBeforeMount, onMounted, onUnmounted, ref, computed } from "vue";
+import { computed, onBeforeMount, onMounted, onUnmounted, ref } from "vue";
 
 const currentRouteName = computed(() => router.currentRoute.value.name);
 const userStore = useUserStore();
@@ -11,12 +11,10 @@ const { isLoggedIn } = storeToRefs(userStore);
 const { toast } = storeToRefs(useToastStore());
 const isSidebarVisible = ref(false); // State to toggle sidebar visibility
 
+// Make sure to update the session before mounting the app in case the user is already logged in
 onBeforeMount(async () => {
   try {
     await userStore.updateSession();
-    if (!isLoggedIn.value) {
-      await router.push({ name: "Login" });
-    }
   } catch {
     // User is not logged in
   }
@@ -58,7 +56,8 @@ const navigateTo = async (viewName: string) => {
       <h1 class="title" @click="navigateTo('Home')">Enlighten</h1>
 
       <!-- Profile Button -->
-      <div class="profile-button" @click="navigateTo('Profile')">Profile</div>
+      <div v-if="isLoggedIn" class="profile-button" @click="navigateTo('Profile')">Profile</div>
+      <div v-else class="profile-button" @click="navigateTo('Login')">Login</div>
     </nav>
 
     <!-- Sidebar -->

@@ -90,7 +90,7 @@ const emptyForm = () => {
     <input id="locationY" type="number" step="any" v-model="locationY" placeholder="Latitude" />
 
     <label for="hashtags">Hashtags (comma-separated):</label>
-    <input id="hashtags" type="text" v-model="hashtags" placeholder="#sky,#observation" />
+    <input id="hashtags" type="text" v-model="hashtags" placeholder="moon, northern lights" />
 
     <button type="submit" class="pure-button-primary pure-button">Create Post</button>
   </form>

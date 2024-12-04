@@ -47,8 +47,8 @@ onMounted(async () => {
     <!-- Earned Badges -->
     <div v-if="selectedBadgeTab === 'earned'" class="badge-list">
       <p v-if="earnedBadges.length === 0">No earned badges yet.</p>
-      <div v-for="badge in earnedBadges" :key="badge._id" class="badge-card earned">
-        <img :src="badge.logo" />
+      <div v-for="badge in earnedBadges" :key="badge._id" class="badge-card">
+        <img :src="badge.logo" class="badge-img" />
         <h3>{{ badge.name }}</h3>
         <p>{{ badge.threshold }} points achieved!</p>
       </div>
@@ -56,7 +56,7 @@ onMounted(async () => {
     <!-- Not Earned Badges -->
     <div v-if="selectedBadgeTab === 'notEarned'" class="badge-list">
       <p v-if="notEarnedBadges.length === 0">No badges in progress</p>
-      <div v-for="[badge, pointsLeft] in notEarnedBadges" :key="badge._id" class="badge-card not-earned">
+      <div v-for="[badge, pointsLeft] in notEarnedBadges" :key="badge._id" class="badge-card">
         <h3>{{ badge.name }}</h3>
         <img :src="badge.logo" class="badge-img" />
         <p>{{ pointsLeft }} / {{ badge.threshold }} Points Left</p>
@@ -113,12 +113,8 @@ onMounted(async () => {
     box-shadow 0.3s ease;
 }
 
-.badge-card.earned {
-  background: #063970;
-  color: white;
-}
 
-.badge-card.not-earned {
+.badge-card {
   background: #f5f5f5;
   color: #063970;
   border: 1px solid #063970;
