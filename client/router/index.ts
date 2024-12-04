@@ -9,6 +9,7 @@ import NotFoundView from "../views/NotFoundView.vue";
 import PostView from "../views/PostView.vue";
 import ProfileView from "../views/ProfileView.vue";
 import SettingView from "../views/SettingView.vue";
+import ViewablePlanetsView from "../views/ViewablePlanetsView.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -34,6 +35,12 @@ const router = createRouter({
       path: "/posts",
       name: "Posts",
       component: PostView,
+      meta: { requiresAuth: true },
+    },
+    {
+      path: "/find",
+      name: "Find",
+      component: ViewablePlanetsView,
       meta: { requiresAuth: true },
     },
     {
