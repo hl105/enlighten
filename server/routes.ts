@@ -2,14 +2,13 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Authing, Friending, Posting, Rewarding, Sessioning } from "./app";
+import { Authing, Foruming, Friending, Posting, Rewarding, Sessioning } from "./app";
 import { SessionDoc } from "./concepts/sessioning";
 import Responses from "./responses";
 
 import { z } from "zod";
 import { Badge } from "./concepts/rewarding";
 
-import multer from "multer";
 /**
  * Web server routes for the app. Implements synchronizations between concepts.
  */
@@ -262,6 +261,65 @@ class Routes {
     const uid = new ObjectId(userId);
     const bid = new ObjectId(badgeId);
     return await Rewarding.addPoints(uid, bid, points);
+  }
+
+  @Router.post("/forums")
+  async createForum(session: SessionDoc, title: string, description: string) {
+    const user = Sessioning.getUser(session);
+    await Foruming.createForum(user, title, description);
+    return { msg: "Forum created successfully!" };
+  }
+
+  @Router.delete("/forums/:forumId")
+  async deleteForum(session: SessionDoc, forumId: string) {
+    const user = Sessioning.getUser(session);
+    const forumObjectId = new ObjectId(forumId);
+    await Foruming.deleteForum(user, forumObjectId);
+    return { msg: "Forum deleted successfully!" };
+  }
+
+  @Router.patch("/forums/:forumId")
+  async editForum(session: SessionDoc, forumId: string, title: string, description: string) {
+    const user = Sessioning.getUser(session);
+    const forumObjectId = new ObjectId(forumId);
+    await Foruming.editForum(user, forumObjectId, title, description);
+    return { msg: "Forum title successfully updated!" };
+  }
+
+  @Router.post("/forums/comments/:forumId")
+  async addCommentToForum(session: SessionDoc, forumId: string, text: string) {
+    const user = Sessioning.getUser(session);
+    const forumObjectId = new ObjectId(forumId);
+    await Foruming.createComment(user, forumObjectId, text);
+    return { msg: "Comment successfully added to forum!" };
+  }
+
+  @Router.delete("/forums/comments/:forumId/:commentId")
+  async deleteCommentFromForum(session: SessionDoc, forumId: string, commentId: string) {
+    const user = Sessioning.getUser(session);
+    const commentObjectId = new ObjectId(commentId);
+    await Foruming.deleteCommentFromForum(user, commentObjectId);
+    return { msg: "Comment successfully deleted from forum!" };
+  }
+
+  @Router.get("/forums/:author?")
+  @Router.validate(z.object({ author: z.string().optional() }))
+  async getForums(author?: string) {
+    let forums;
+    if (author) {
+      const id = (await Authing.getUserByUsername(author))._id;
+      forums = await Foruming.getByAuthor(id);
+    } else {
+      forums = await Foruming.getForums();
+    }
+    return Responses.forums(forums);
+  }
+
+  @Router.get("/forums/comments/:forumId")
+  async getComments(forumId: string) {
+    const forumObjectId = new ObjectId(forumId);
+    const comments = await Foruming.getCommentByForum(forumObjectId);
+    return Responses.comments(comments);
   }
 }
 

@@ -1,4 +1,5 @@
 import { Authing } from "./app";
+import { ForumDoc } from "./concepts/foruming";
 import { AlreadyFriendsError, FriendNotFoundError, FriendRequestAlreadyExistsError, FriendRequestDoc, FriendRequestNotFoundError } from "./concepts/friending";
 import { PostAuthorNotMatchError, PostDoc } from "./concepts/posting";
 import { Router } from "./framework/router";
@@ -25,6 +26,44 @@ export default class Responses {
   static async posts(posts: PostDoc[]) {
     const authors = await Authing.idsToUsernames(posts.map((post) => post.author));
     return posts.map((post, i) => ({ ...post, author: authors[i] }));
+  }
+
+  /**
+   * Convert ForumDoc into more readable format for the frontend by converting the author id into a username.
+   */
+  static async forum(forum: ForumDoc | null) {
+    if (!forum) {
+      return forum;
+    }
+    const author = await Authing.getUserById(forum.author);
+    return { ...forum, author: author.username };
+  }
+
+  /**
+   * Same as {@link forum} but for an array of ForumDoc for improved performance.
+   */
+  static async forums(forums: ForumDoc[]) {
+    const authors = await Authing.idsToUsernames(forums.map((forum) => forum.author));
+    return forums.map((forum, i) => ({ ...forum, author: authors[i] }));
+  }
+
+  /**
+   * Convert CommentDoc into more readable format for the frontend by converting the author id into a username.
+   */
+  static async comment(comment: CommentDoc | null) {
+    if (!comment) {
+      return comment;
+    }
+    const author = await Authing.getUserById(comment.author);
+    return { ...comment, author: author.username };
+  }
+
+  /**
+   * Same as {@link comment} but for an array of CommentDoc for improved performance.
+   */
+  static async comments(comments: CommentDoc[]) {
+    const authors = await Authing.idsToUsernames(comments.map((comment) => comment.author));
+    return comments.map((comment, i) => ({ ...comment, author: authors[i] }));
   }
 
   /**

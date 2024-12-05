@@ -65,7 +65,7 @@ const navigateTo = async (viewName: string) => {
       <ul>
         <li @click="navigateTo('Map')">Map</li>
         <li @click="navigateTo('Posts')">Posts</li>
-        <li @click="navigateTo('Forum')">Forums</li>
+        <li @click="navigateTo('Forums')">Forums</li>
         <li @click="navigateTo('Find')">Find</li>
       </ul>
     </aside>

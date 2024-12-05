@@ -1,0 +1,90 @@
+<script setup lang="ts">
+import router from "@/router";
+import { useUserStore } from "@/stores/user";
+import { fetchy } from "@/utils/fetchy";
+import { formatDate } from "@/utils/formatDate";
+import { storeToRefs } from "pinia";
+
+const props = defineProps(["forum"]);
+const emit = defineEmits(["editForum", "refreshForums"]);
+const { currentUsername } = storeToRefs(useUserStore());
+
+const deleteForum = async () => {
+  try {
+    await fetchy(`/api/forums/${props.forum._id}`, "DELETE");
+  } catch {
+    return;
+  }
+  emit("refreshForums");
+};
+
+const navigateTo = async (viewName: string) => {
+  await router.push({ name: viewName });
+};
+</script>
+
+<template>
+  <div class="forum-container">
+    <p class="author">{{ props.forum.author }}</p>
+    <p class="forum-title">{{ props.forum.title }}</p>
+    <p class="forum-description">{{ props.forum.description }}</p>
+    <div class="base">
+      <menu>
+        <button class="btn-small pure-button" @click="navigateTo('Comments')">Enter</button>
+        <li v-if="props.forum.author == currentUsername">
+          <button class="btn-small pure-button" @click="emit('editForum', props.forum._id)">Edit Forum</button>
+        </li>
+        <li v-if="props.forum.author == currentUsername">
+          <button class="button-error btn-small pure-button" @click="deleteForum">Delete</button>
+        </li>
+      </menu>
+      <article class="timestamp">
+        <p v-if="props.forum.dateCreated !== props.forum.dateUpdated">Edited on: {{ formatDate(props.forum.dateUpdated) }}</p>
+        <p v-else>Created on: {{ formatDate(props.forum.dateCreated) }}</p>
+      </article>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+p {
+  margin: 0em;
+}
+
+.author {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+menu {
+  list-style-type: none;
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+  padding: 0;
+  margin: 0;
+}
+
+.timestamp {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 0.9em;
+  font-style: italic;
+}
+
+.base {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.base article:only-child {
+  margin-left: auto;
+}
+</style>
