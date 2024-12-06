@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { usePostStore } from "@/stores/posts";
-import { onBeforeMount, ref } from "vue";
 import CreatePostForm from "@/components/Post/CreatePostForm.vue";
 import EditPostForm from "@/components/Post/EditPostForm.vue";
 import PostComponent from "@/components/Post/PostComponent.vue";
+import { usePostStore } from "@/stores/posts";
+import { onBeforeMount, ref } from "vue";
 import SearchPostForm from "./SearchPostForm.vue";
 
 const postStore = usePostStore();
@@ -89,6 +89,8 @@ article {
 .sort-buttons {
   display: flex;
   gap: 0.5em; /* Add spacing between buttons */
+  margin: 0 auto;
+  max-width: 60em;
 }
 
 .sort-button {
