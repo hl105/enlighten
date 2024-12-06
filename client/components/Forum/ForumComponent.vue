@@ -18,8 +18,8 @@ const deleteForum = async () => {
   emit("refreshForums");
 };
 
-const navigateTo = async (viewName: string) => {
-  await router.push({ name: viewName });
+const navigateTo = async (name: string) => {
+  await router.push({ name: name, component: CommentView });
 };
 </script>
 
@@ -30,7 +30,7 @@ const navigateTo = async (viewName: string) => {
     <p class="forum-description">{{ props.forum.description }}</p>
     <div class="base">
       <menu>
-        <button class="btn-small pure-button" @click="navigateTo('Comments')">Enter</button>
+        <button class="btn-small pure-button" @click="navigateTo(`/forums/comments/${props.forum._id}`)">Enter</button>
         <li v-if="props.forum.author == currentUsername">
           <button class="btn-small pure-button" @click="emit('editForum', props.forum._id)">Edit Forum</button>
         </li>

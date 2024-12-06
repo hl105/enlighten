@@ -9,7 +9,7 @@ const emit = defineEmits(["refreshComments"]);
 
 const addCommentToForum = async () => {
   try {
-    await fetchy(`/api/forums/${forumId.value}`, "POST", {
+    await fetchy(`/api/forums/comments/${forumId.value}`, "POST", {
       body: {
         forumId: forumId.value,
         text: text.value,

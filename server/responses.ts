@@ -1,5 +1,5 @@
 import { Authing } from "./app";
-import { ForumDoc } from "./concepts/foruming";
+import { CommentDoc, ForumDoc } from "./concepts/foruming";
 import { AlreadyFriendsError, FriendNotFoundError, FriendRequestAlreadyExistsError, FriendRequestDoc, FriendRequestNotFoundError } from "./concepts/friending";
 import { PostAuthorNotMatchError, PostDoc } from "./concepts/posting";
 import { Router } from "./framework/router";

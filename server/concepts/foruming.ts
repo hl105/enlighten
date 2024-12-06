@@ -125,21 +125,21 @@ export default class ForumingConcept {
    * Retrieves comments created by a specific author.
    */
   async getCommentByAuthor(author: ObjectId) {
-    return await this.forums.readMany({ author });
+    return await this.comments.readMany({ author });
   }
 
   /**
    * Retrieves comments created under a specific forum.
    */
   async getCommentByForum(forum: ObjectId) {
-    return await this.forums.readMany({ forum });
+    return await this.comments.readMany({ forum });
   }
 
   /**
    * Retrieves comments with specified comment Id.
    */
   async getCommentById(id: ObjectId) {
-    return await this.forums.readMany({ id });
+    return await this.comments.readMany({ id });
   }
 }
 
