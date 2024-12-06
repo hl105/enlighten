@@ -50,7 +50,7 @@ onBeforeMount(fetchSpaceObjects);
 
 <template>
   <div class="row">
-    <h2>Space Objects:</h2>
+    <h2>Space Objects Visible Now:</h2>
   </div>
   <section class="space-objects" v-if="spaceObjects.length !== 0">
     <article v-for="object in spaceObjects" :key="object.name">

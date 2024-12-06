@@ -5,6 +5,7 @@ import { PlanetInfo } from '@/stores/spaceView';
 const props = defineProps<{
   planetData: PlanetInfo; // The planet data is now passed in as a prop
 }>();
+
 </script>
 <template>
   <div class="base">
@@ -14,8 +15,8 @@ const props = defineProps<{
       <p><strong>Constellation:</strong> {{ props.planetData.constellation }}</p>
       <p><strong>Right Ascension:</strong> {{ props.planetData.rightAscension }}</p>
       <p><strong>Declination:</strong> {{ props.planetData.declination }}</p>
-      <p><strong>Altitude:</strong> {{ props.planetData.altitude }}°</p>
-      <p><strong>Azimuth:</strong> {{ props.planetData.azimuth }}°</p>
+      <p><strong>Altitude:</strong> {{ props.planetData.altitude }}</p>
+      <p><strong>Azimuth:</strong> {{ props.planetData.azimuth }}</p>
       <p><strong>Magnitude:</strong> {{ props.planetData.magnitude }}</p>
       <p><strong>Visible by Naked Eye:</strong> {{ props.planetData.nakedEyeObject ? "Yes" : "No" }}</p>
     </article>

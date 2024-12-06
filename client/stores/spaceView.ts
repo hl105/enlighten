@@ -1,13 +1,13 @@
 interface PlanetInfo {
   name: string;
   constellation: string;
-  rightAscension: string; // In "HH:MM:SS" format
-  declination: string;    // In "±DD:MM:SS" format
-  altitude: string;       // Degrees
-  azimuth: string;        // Degrees
-  aboveHorizon: string;
-  magnitude: string;
-  nakedEyeObject: boolean;
+  rightAscension: string; // Formatted as "HH:MM:SS" (user-friendly)
+  declination: string;    // Formatted as "±DD:MM:SS" (user-friendly)
+  altitude: string;       // Formatted as a string with 1 decimal place and "°"
+  azimuth: string;        // Formatted as a string with 1 decimal place and "°"
+  aboveHorizon: string;   // "Yes" or "No" for clarity
+  magnitude: string;      // Formatted as a string with 1 decimal place
+  nakedEyeObject: string; // "Yes" or "No" for clarity
   imageUrl: string;       // URL of the planet's image
 }
 
@@ -39,19 +39,22 @@ class PlanetVisibilityService {
    * @returns A PlanetInfo object.
    */
   private async mapPlanetData(planet: any): Promise<PlanetInfo> {
-    const rightAscension = `${planet.rightAscension.hours}:${planet.rightAscension.minutes}:${planet.rightAscension.seconds.toFixed(1)}`;
-    const declination = `${planet.declination.negative ? "-" : "+"}${planet.declination.degrees}:${planet.declination.arcminutes}:${planet.declination.arcseconds.toFixed(1)}`;
+    const formatDecimal = (value: number): string => value.toFixed(1); // 1 decimal place
+    const formatAngle = (value: number): string => `${formatDecimal(value)}°`; // Append degree symbol
+
+    const rightAscension = `${planet.rightAscension.hours.toString().padStart(2, '0')}:${planet.rightAscension.minutes.toString().padStart(2, '0')}:${planet.rightAscension.seconds.toFixed(1).padStart(4, '0')}`;
+    const declination = `${planet.declination.negative ? "-" : "+"}${planet.declination.degrees.toString().padStart(2, '0')}:${planet.declination.arcminutes.toString().padStart(2, '0')}:${planet.declination.arcseconds.toFixed(1).padStart(4, '0')}`;
 
     return {
       name: planet.name,
       constellation: planet.constellation,
       rightAscension,
       declination,
-      altitude: planet.altitude.toString(),
-      azimuth: planet.azimuth.toString(),
-      aboveHorizon: planet.aboveHorizon.toString(),
-      magnitude: planet.magnitude.toString(),
-      nakedEyeObject: planet.nakedEyeObject,
+      altitude: formatAngle(planet.altitude),
+      azimuth: formatAngle(planet.azimuth),
+      aboveHorizon: planet.aboveHorizon ? "Yes" : "No",
+      magnitude: formatDecimal(planet.magnitude),
+      nakedEyeObject: planet.nakedEyeObject ? "Yes" : "No",
       imageUrl: await this.getPlanetImageUrl(planet.name),
     };
   }
@@ -88,7 +91,6 @@ class PlanetVisibilityService {
       return "https://via.placeholder.com/150"; // Fallback to placeholder on error
     }
   }
-
 }
 
 export { PlanetVisibilityService };
