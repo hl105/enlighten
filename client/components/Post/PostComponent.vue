@@ -18,7 +18,7 @@ const deletePost = async () => {
   emit("refreshPosts");
 };
 
-const locationString = props.post.location ? `Location: (${props.post.location.coordinates[0]}, ${props.post.location.coordinates[1]})` : "Location: Not specified";
+const locationString = props.post.location ? `Location: (${props.post.location.coordinates[1]}, ${props.post.location.coordinates[0]})` : "Location: Not specified";
 
 // Function to construct image URL
 const getImageUrl = (imageId: string) => {
