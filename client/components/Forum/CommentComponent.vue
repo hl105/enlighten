@@ -3,14 +3,18 @@ import { useUserStore } from "@/stores/user";
 import { fetchy } from "@/utils/fetchy";
 import { formatDate } from "@/utils/formatDate";
 import { storeToRefs } from "pinia";
+import { useRoute } from "vue-router";
 
 const props = defineProps(["comment"]);
 const emit = defineEmits(["refreshComments"]);
 const { currentUsername } = storeToRefs(useUserStore());
 
+const route = useRoute();
+const forumId = route.params.forumId as string;
+
 const deleteCommentFromForum = async () => {
   try {
-    await fetchy(`/api/forums/comments/${props.comment._id}`, "DELETE");
+    await fetchy(`/api/forums/comments/${forumId}/${props.comment._id}`, "DELETE");
   } catch {
     return;
   }
@@ -19,9 +23,9 @@ const deleteCommentFromForum = async () => {
 </script>
 
 <template>
-  <div class="forum-container">
+  <div class="comment-container">
     <p class="author">{{ props.comment.author }}</p>
-    <p class="forum-title">{{ props.comment.text }}</p>
+    <p class="comment-text">{{ props.comment.text }}</p>
     <div class="base">
       <menu>
         <li v-if="props.comment.author == currentUsername">

@@ -1,17 +1,20 @@
 <script setup lang="ts">
 import { ref } from "vue";
+import { useRoute } from "vue-router";
 import { fetchy } from "../../utils/fetchy";
 
-const forumId = ref("");
+const route = useRoute();
+const forumId = route.params.forumId as string;
+
 const text = ref("");
 
 const emit = defineEmits(["refreshComments"]);
 
 const addCommentToForum = async () => {
   try {
-    await fetchy(`/api/forums/comments/${forumId.value}`, "POST", {
+    await fetchy(`/api/forums/comments/${forumId}`, "POST", {
       body: {
-        forumId: forumId.value,
+        forumId: forumId,
         text: text.value,
       },
     });
@@ -23,7 +26,6 @@ const addCommentToForum = async () => {
 };
 
 const emptyForm = () => {
-  forumId.value = "";
   text.value = "";
 };
 </script>

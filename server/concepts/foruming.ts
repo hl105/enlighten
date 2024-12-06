@@ -113,6 +113,16 @@ export default class ForumingConcept {
   }
 
   /**
+   * Retrieves title of forum with given id.
+   */
+  async getTitleById(forumObjectId: ObjectId) {
+    const forum = await this.forums.readOne({ forumObjectId });
+    if (forum !== null) {
+      return forum.title;
+    }
+  }
+
+  /**
    * Retrieves comments based on provided filters.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

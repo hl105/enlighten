@@ -315,6 +315,13 @@ class Routes {
     return Responses.forums(forums);
   }
 
+  @Router.get("/forums/:forumId")
+  async getForumTitleById(forumId: string) {
+    const forumObjectId = new ObjectId(forumId);
+    const name = await Foruming.getTitleById(forumObjectId);
+    return name;
+  }
+
   @Router.get("/forums/comments/:forumId")
   async getComments(forumId: string) {
     const forumObjectId = new ObjectId(forumId);
