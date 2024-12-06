@@ -20,7 +20,6 @@ const submitSearch = () => {
     <fieldset>
       <legend>Search Posts</legend>
       <input id="author" type="text" v-model="author" placeholder="Author Username" />
-      <input id="location" type="text" v-model="location" placeholder="Location (x,y)" />
       <input id="hashtags" type="text" v-model="hashtags" placeholder="Hashtags (comma-separated)" />
       <button type="submit" class="pure-button pure-button-primary">Search</button>
     </fieldset>
