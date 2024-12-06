@@ -10,33 +10,35 @@ const commentStore = useCommentStore();
 const route = useRoute();
 const forumId = route.params.forumId as string;
 
-/*const forumTitleFromId = async (forumId: string) => {
+/*const forumTitleFromId = async () => {
   try {
     const response = await fetchy(`/api/forums/${forumId}`, "GET");
     return response;
   } catch (e) {
     return;
   }
-};
+};*/
 
-const forumTitle = await forumTitleFromId(forumId);*/
+//const forumTitle = await forumTitleFromId();
+//this isnt working?
 
-//forumTitle isn't working?
-
-onBeforeMount(async (forumId: string) => {
+onBeforeMount(async () => {
   await commentStore.fetchComments(forumId);
 });
 </script>
 
 <template>
   <section>
-    <h2>{{ "Forum: " + forumId }}</h2>
-    <h2>Create a comment:</h2>
+    <h1>{{ "Forum: " + forumId }}</h1>
+    <h1>Create a comment:</h1>
     <CreateCommentForm @refreshComments="commentStore.fetchComments(forumId)" />
+  </section>
+  <section>
+    <h1>{{ "Comments:" }}</h1>
   </section>
   <section class="comments" v-if="commentStore.comments.length !== 0">
     <article v-for="comment in commentStore.comments" :key="comment._id">
-      <CommentComponent :comment="comment" @refreshForums="commentStore.fetchComments(forumId)" />
+      <CommentComponent :comment="comment" @refreshComments="commentStore.fetchComments(forumId)" />
     </article>
   </section>
   <p v-else>No comments found</p>
