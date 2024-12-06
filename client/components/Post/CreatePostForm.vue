@@ -73,6 +73,25 @@ const emptyForm = () => {
   locationY.value = "";
   hashtags.value = "";
 };
+
+const useCurrentLocation = async () => {
+  if (!navigator.geolocation) {
+    alert("Geolocation is not supported by your browser.");
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      locationX.value = position.coords.longitude.toString();
+      locationY.value = position.coords.latitude.toString();
+    },
+    (error) => {
+      console.error("Error fetching location:", error);
+      alert("Unable to fetch location. Please check your permissions.");
+    }
+  );
+};
+
 </script>
 
 <template>
@@ -88,6 +107,8 @@ const emptyForm = () => {
 
     <label for="locationY">Location Y:</label>
     <input id="locationY" type="number" step="any" v-model="locationY" placeholder="Latitude" />
+
+    <button type="button" @click="useCurrentLocation" class="use-location-button">Use Current Location</button>
 
     <label for="hashtags">Hashtags (comma-separated):</label>
     <input id="hashtags" type="text" v-model="hashtags" placeholder="moon, northern lights" />
@@ -133,5 +154,20 @@ button {
 
 button:hover {
   background-color: #052b5c;
+}
+
+.use-location-button {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 0.5em;
+}
+
+.use-location-button:hover {
+  background-color: #218838;
 }
 </style>
