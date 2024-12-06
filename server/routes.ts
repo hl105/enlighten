@@ -90,7 +90,7 @@ class Routes {
     const imageObjectId = new ObjectId(imageId);
     const created = await Posting.createPost(user, description, imageObjectId, loc, hashtagsArray);
     const stargazerBadge = new ObjectId("6747e3736bb51059bcc33fd6"); // id of stargazer badge (given for posting)
-    const response = await Rewarding.addPoints(user, stargazerBadge, 5); // 5 points for testing purposes for now
+    const response = await Rewarding.addPoints(user, stargazerBadge, 1);
     const responseHashtag = await Rewarding.addPointsHashtag(user, hashtagsArray);
 
     const earned = response.earned === "updated" || responseHashtag.earned === "updated" ? "updated" : "no change";

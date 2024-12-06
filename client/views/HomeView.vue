@@ -66,7 +66,7 @@ const images = ref([
             </PrimeCard>
             <PrimeCard class="PrimeCard">
               <template #header>
-                <img alt="user header" src="/client/assets/images/default_profile.png" class="card-header-img" />
+                <img alt="user header" src="https://i.imgur.com/xyWM5Ht.png" class="card-header-img" />
               </template>
               <template #title>Post</template>
               <template #subtitle>Share what you saw in the night sky today</template>
@@ -93,7 +93,7 @@ const images = ref([
             </PrimeCard>
             <PrimeCard class="PrimeCard">
               <template #header>
-                <img alt="user header" src="/client/assets/images/default_profile.png" class="card-header-img" />
+                <img alt="user header" src="https://i.imgur.com/MMMukEx.png" class="card-header-img" />
               </template>
               <template #title>Find</template>
               <template #subtitle>Locate Space Objects</template>

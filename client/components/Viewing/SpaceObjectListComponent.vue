@@ -24,7 +24,7 @@ async function getUserLocation(): Promise<{ latitude: number; longitude: number 
       },
       () => {
         reject("Unable to retrieve your location.");
-      }
+      },
     );
   });
 }
@@ -35,10 +35,7 @@ async function getUserLocation(): Promise<{ latitude: number; longitude: number 
 async function fetchSpaceObjects() {
   try {
     const location = await getUserLocation();
-    spaceObjects.value = await planetVisibilityService.getVisiblePlanets(
-      location.latitude,
-      location.longitude
-    );
+    spaceObjects.value = await planetVisibilityService.getVisiblePlanets(location.latitude, location.longitude);
     console.log(spaceObjects.value);
   } catch (err: any) {
     error.value = err.message || "An error occurred while fetching space objects.";
@@ -58,13 +55,14 @@ onBeforeMount(fetchSpaceObjects);
     </article>
   </section>
   <div v-else>
-    <p>Space objects loading...</p>
+    <p>Space objects loading... (takes ~10 seconds)</p>
     <p>If it is the first time try refreshing.</p>
   </div>
 </template>
 
 <style scoped>
-h1 {
+h1,
+p {
   color: white;
 }
 section {

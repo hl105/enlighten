@@ -81,6 +81,7 @@ onMounted(async () => {
 h1 {
   font-size: 4em;
   flex: 1 1 auto;
+  color: white;
 }
 
 .profile-image {
