@@ -5,14 +5,13 @@ import PostComponent from "@/components/Post/PostComponent.vue";
 import { usePostStore } from "@/stores/posts";
 import { onBeforeMount, ref } from "vue";
 import SearchPostForm from "./SearchPostForm.vue";
-import { create } from "connect-mongo";
 
 const postStore = usePostStore();
 
 const editing = ref("");
 const createPost = ref(false);
 
-function setCreatePost(){
+function setCreatePost() {
   createPost.value = !createPost.value;
 }
 function updateEditing(id: string) {
@@ -149,5 +148,4 @@ section {
   justify-content: center;
   margin-top: 2em;
 }
-
 </style>
