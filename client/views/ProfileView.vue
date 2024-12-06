@@ -39,6 +39,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  <div class="background"></div>
   <main class="profile">
     <div class="header">
       <img class="profile-image" src="../assets/images/default_profile.png" />
@@ -110,19 +111,6 @@ h1 {
   max-width: 1200px;
 }
 
-.post {
-  background: #063970; /* Light card-like background */
-  border-radius: 12px;
-  padding: 1.5em;
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-  transition:
-    transform 0.3s ease,
-    box-shadow 0.3s ease;
-  color: white;
-}
-
 .button {
   cursor: pointer;
   font-size: 1em;
@@ -135,5 +123,17 @@ h1 {
 
 .button:hover {
   background-color: #e6f7ff;
+}
+
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* background: linear-gradient(to bottom, #005eff, #003d99); */
+  background-image: url(@/assets/images/wallpaper.png);
+  overflow: hidden;
+  z-index: -1;
 }
 </style>

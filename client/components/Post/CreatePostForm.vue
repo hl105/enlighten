@@ -88,10 +88,9 @@ const useCurrentLocation = async () => {
     (error) => {
       console.error("Error fetching location:", error);
       alert("Unable to fetch location. Please check your permissions.");
-    }
+    },
   );
 };
-
 </script>
 
 <template>
@@ -121,12 +120,15 @@ const useCurrentLocation = async () => {
 
 <style scoped>
 form {
-  background-color: var(--base-bg);
+  background: rgba(0, 0, 0, 0.5);
+  /* background-color: var(--base-bg); */
   border-radius: 1em;
   display: flex;
   flex-direction: column;
   gap: 0.5em;
   padding: 1em;
+  width: 30em;
+  color: white;
 }
 
 textarea,
@@ -150,6 +152,8 @@ button {
   padding: 0.5em 1em;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  width: 13em;
+  margin-left: 25%;
 }
 
 button:hover {
@@ -165,6 +169,7 @@ button:hover {
   cursor: pointer;
   transition: background-color 0.3s ease;
   margin-top: 0.5em;
+  margin-left: 25%;
 }
 
 .use-location-button:hover {

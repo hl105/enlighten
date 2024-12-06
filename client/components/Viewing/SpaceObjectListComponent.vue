@@ -50,7 +50,7 @@ onBeforeMount(fetchSpaceObjects);
 
 <template>
   <div class="row">
-    <h2>Space Objects Visible Now:</h2>
+    <h1>Space Objects Visible Now</h1>
   </div>
   <section class="space-objects" v-if="spaceObjects.length !== 0">
     <article v-for="object in spaceObjects" :key="object.name">
@@ -64,6 +64,9 @@ onBeforeMount(fetchSpaceObjects);
 </template>
 
 <style scoped>
+h1 {
+  color: white;
+}
 section {
   display: flex;
   flex-direction: column;
@@ -92,7 +95,7 @@ article {
 
 .row {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   margin: 0 auto;
   max-width: 60em;
 }

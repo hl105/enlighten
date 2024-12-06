@@ -47,9 +47,24 @@ const goToComments = async (forumId: string) => {
 </template>
 
 <style scoped>
+.forum-container {
+  background: #063970;
+  border-radius: 12px;
+  padding: 1.5em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+  color: white;
+}
+
 img {
+  max-height: 300px;
   max-width: 100%;
-  height: auto;
+  width: auto;
+  object-fit: cover;
   border-radius: 8px;
 }
 
@@ -82,6 +97,7 @@ menu {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 2em;
 }
 
 .base article:only-child {

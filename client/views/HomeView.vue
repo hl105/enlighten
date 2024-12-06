@@ -71,14 +71,12 @@ const images = ref([
               <template #title>Post</template>
               <template #subtitle>Share what you saw in the night sky today</template>
               <template #content>
-                <p class="m-0">
-                  You can get badges by: <br />
-                  <li>
-                    adding hashtags like "moon", "constellation",<br />
-                    "northern lights"
-                  </li>
-                  <li>or if you post frequently!</li>
-                </p>
+                <p class="m-0">You can get badges by: <br /></p>
+                <li>
+                  adding hashtags like "moon", "constellation",<br />
+                  "northern lights"
+                </li>
+                <li>or if you post frequently!</li>
               </template>
             </PrimeCard>
           </div>

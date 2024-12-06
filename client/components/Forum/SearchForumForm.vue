@@ -31,4 +31,27 @@ form {
   padding: 1em;
   align-items: center;
 }
+
+button {
+  background-color: #063970;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #052b5c;
+}
+
+fieldset {
+  display: flex;
+  gap: 1em;
+}
+
+legend {
+  color: white;
+}
 </style>

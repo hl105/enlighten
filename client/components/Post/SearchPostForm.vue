@@ -48,4 +48,13 @@ button {
 button:hover {
   background-color: #052b5c;
 }
+
+fieldset {
+  display: flex;
+  gap: 1em;
+}
+
+legend {
+  color: white;
+}
 </style>
