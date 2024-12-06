@@ -18,6 +18,14 @@ function updateSearchParams(params: { author?: string; location?: string; hashta
   postStore.filterPosts(params);
 }
 
+function sortPostsByLikes() {
+  postStore.filteredPosts.sort((a, b) => b.likes - a.likes);
+}
+
+function sortPostsByDate() {
+  postStore.filteredPosts.sort((a, b) => new Date(b.dateCreated).getTime() - new Date(a.dateCreated).getTime());
+}
+
 onBeforeMount(async () => {
   await postStore.fetchPosts();
 });
@@ -31,6 +39,10 @@ onBeforeMount(async () => {
   <div class="row">
     <h2>Posts:</h2>
     <SearchPostForm @updateSearch="updateSearchParams" />
+  </div>
+  <div class="sort-buttons">
+    <button @click="sortPostsByLikes" class="sort-button">Sort by Number of Likes</button>
+    <button @click="sortPostsByDate" class="sort-button">Sort by Date Added</button>
   </div>
   <section class="posts" v-if="postStore.filteredPosts.length !== 0">
     <article v-for="post in postStore.filteredPosts" :key="post._id">
@@ -73,5 +85,24 @@ article {
   justify-content: space-between;
   margin: 0 auto;
   max-width: 60em;
+}
+.sort-buttons {
+  display: flex;
+  gap: 0.5em; /* Add spacing between buttons */
+}
+
+.sort-button {
+  background-color: #063970;
+  color: #fff;
+  border: none;
+  padding: 0.3em 0.6em; /* Compact size */
+  font-size: 0.9em;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.sort-button:hover {
+  background-color: #052b5c;
 }
 </style>
