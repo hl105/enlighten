@@ -20,10 +20,23 @@ const getImageUrl = (imageId: string) => {
   return `/api/images/${imageId}`;
 };
 
+function normalizeLatitude(lat: number): number {
+  while (lat > 90 || lat < -90) {
+    lat = lat > 90 ? 180 - lat : lat < -90 ? -180 - lat : lat;
+  }
+  return lat;
+}
+
+function normalizeLongitude(lon: number): number {
+  return ((lon + 180) % 360 + 360) % 360 - 180;
+}
+
+
 onMounted(async () => {
   // Fetch posts if not already loaded
   if (postStore.posts.length === 0) {
     await postStore.fetchPosts();
+    console.log(postStore.posts);
   }
 
   // Initialize the map
@@ -39,7 +52,7 @@ onMounted(async () => {
     const { coordinates } = post.location;
     if (coordinates?.[0] && coordinates?.[1]) {
       const marker = new mapboxgl.Marker()
-        .setLngLat([coordinates[1], coordinates[0]]) // [longitude, latitude]
+        .setLngLat([normalizeLongitude(coordinates[0]), normalizeLatitude(coordinates[1])]) // [longitude, latitude]
         .addTo(map.value!);
 
       // Add a popup with details

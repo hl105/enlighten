@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 import { fetchy } from "../../utils/fetchy";
 import UnlockedComponent from "../Reward/UnlockedComponent.vue";
 
@@ -91,6 +91,11 @@ const useCurrentLocation = async () => {
     },
   );
 };
+
+// Automatically set default location on component mount
+onMounted(() => {
+  useCurrentLocation();
+});
 </script>
 
 <template>
@@ -101,11 +106,11 @@ const useCurrentLocation = async () => {
     <label for="image">Upload Image:</label>
     <input id="image" type="file" @change="handleFileChange" accept="image/*" />
 
-    <label for="locationX">Location X:</label>
-    <input id="locationX" type="number" step="any" v-model="locationX" placeholder="Longitude" />
-
-    <label for="locationY">Location Y:</label>
+    <label for="locationY">Latitude:</label>
     <input id="locationY" type="number" step="any" v-model="locationY" placeholder="Latitude" />
+    
+    <label for="locationX">Longitude:</label>
+    <input id="locationX" type="number" step="any" v-model="locationX" placeholder="Longitude" />
 
     <button type="button" @click="useCurrentLocation" class="use-location-button">Use Current Location</button>
 
