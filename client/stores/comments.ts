@@ -6,9 +6,9 @@ export const useCommentStore = defineStore("commentStore", {
   }),
   actions: {
     // Fetch comments from the backend for specific forum
-    async fetchComments(forumId: string) {
+    async fetchComments(forumId: string, forumTitle: string) {
       try {
-        const response = await fetch(`/api/forums/comments/${forumId}`);
+        const response = await fetch(`/api/forums/comments/${forumId}/${forumTitle}`);
         const data = await response.json();
         this.comments = data;
       } catch (error) {

@@ -78,7 +78,7 @@ export default class ForumingConcept {
    * Deletes a comment from a specific forum.
    */
   async deleteCommentFromForum(user: ObjectId, commentId: ObjectId) {
-    await this.assertAuthorIsUser(commentId, user);
+    await this.assertAuthorIsCommenter(user, commentId);
     await this.comments.deleteOne({ _id: commentId });
     return { msg: "Comment deleted successfully!" };
   }
@@ -86,13 +86,26 @@ export default class ForumingConcept {
   /**
    * Ensures that the user is the author of the forum.
    */
-  async assertAuthorIsUser(forumId: ObjectId, user: ObjectId) {
+  async assertAuthorIsUser(user: ObjectId, forumId: ObjectId) {
     const forum = await this.forums.readOne({ _id: forumId });
     if (!forum) {
       throw new NotFoundError(`Forum ${forumId} does not exist!`);
     }
     if (forum.author.toString() !== user.toString()) {
       throw new ForumAuthorNotMatchError(user, forumId);
+    }
+  }
+
+  /**
+   * Ensures that the user is the commenter.
+   */
+  async assertAuthorIsCommenter(user: ObjectId, commentId: ObjectId) {
+    const comment = await this.comments.readOne({ _id: commentId });
+    if (!comment) {
+      throw new NotFoundError(`Comment ${commentId} does not exist!`);
+    }
+    if (comment.author.toString() !== user.toString()) {
+      throw new CommentAuthorNotMatchError(user, commentId);
     }
   }
 
@@ -110,16 +123,6 @@ export default class ForumingConcept {
    */
   async getByAuthor(author: ObjectId) {
     return await this.forums.readMany({ author });
-  }
-
-  /**
-   * Retrieves title of forum with given id.
-   */
-  async getTitleById(forumObjectId: ObjectId) {
-    const forum = await this.forums.readOne({ forumObjectId });
-    if (forum !== null) {
-      return forum.title;
-    }
   }
 
   /**
@@ -159,5 +162,14 @@ export class ForumAuthorNotMatchError extends NotAllowedError {
     public readonly _id: ObjectId,
   ) {
     super("{0} is not the author of forum {1}!", author, _id);
+  }
+}
+
+export class CommentAuthorNotMatchError extends NotAllowedError {
+  constructor(
+    public readonly author: ObjectId,
+    public readonly _id: ObjectId,
+  ) {
+    super("{0} is not the author of comment {1}!", author, _id);
   }
 }

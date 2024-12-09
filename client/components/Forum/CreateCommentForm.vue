@@ -5,6 +5,7 @@ import { fetchy } from "../../utils/fetchy";
 
 const route = useRoute();
 const forumId = route.params.forumId as string;
+const forumTitle = route.params.forumTitle as string;
 
 const text = ref("");
 
@@ -12,7 +13,7 @@ const emit = defineEmits(["refreshComments"]);
 
 const addCommentToForum = async () => {
   try {
-    await fetchy(`/api/forums/comments/${forumId}`, "POST", {
+    await fetchy(`/api/forums/comments/${forumId}/${forumTitle}`, "POST", {
       body: {
         forumId: forumId,
         text: text.value,
