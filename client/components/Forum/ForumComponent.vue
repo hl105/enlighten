@@ -11,26 +11,26 @@ const { currentUsername } = storeToRefs(useUserStore());
 
 const deleteForum = async () => {
   try {
-    await fetchy(`/api/forums/${props.forum._id}`, "DELETE");
+    await fetchy(`/api/forums/${props.forum._id}/${props.forum.title}`, "DELETE");
   } catch {
     return;
   }
   emit("refreshForums");
 };
 
-const goToComments = async (forumId: string) => {
-  await router.push({ name: "Comments", params: { forumId } });
+const goToComments = async (forumId: string, forumTitle: string) => {
+  await router.push({ name: "Comments", params: { forumId, forumTitle } });
 };
 </script>
 
 <template>
   <div class="forum-container">
-    <p class="author">{{ props.forum.author }}</p>
     <p class="forum-title">{{ props.forum.title }}</p>
-    <p class="forum-description">{{ props.forum.description }}</p>
+    <p class="author">{{ "Creator: " + props.forum.author }}</p>
+    <p class="forum-description">{{ "Description: " + props.forum.description }}</p>
     <div class="base">
       <menu>
-        <button class="btn-small pure-button" @click="goToComments(props.forum._id)">Enter</button>
+        <button class="btn-small pure-button" @click="goToComments(props.forum._id, props.forum.title)">Enter</button>
         <li v-if="props.forum.author == currentUsername">
           <button class="btn-small pure-button" @click="emit('editForum', props.forum._id)">Edit Forum</button>
         </li>
@@ -69,10 +69,10 @@ img {
 }
 
 p {
-  margin: 0em;
+  margin: 0.3em;
 }
 
-.author {
+.forum-title {
   font-weight: bold;
   font-size: 1.2em;
 }

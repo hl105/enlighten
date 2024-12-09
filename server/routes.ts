@@ -270,7 +270,7 @@ class Routes {
     return { msg: "Forum created successfully!" };
   }
 
-  @Router.delete("/forums/:forumId")
+  @Router.delete("/forums/:forumId/:forumTitle")
   async deleteForum(session: SessionDoc, forumId: string) {
     const user = Sessioning.getUser(session);
     const forumObjectId = new ObjectId(forumId);
@@ -278,7 +278,7 @@ class Routes {
     return { msg: "Forum deleted successfully!" };
   }
 
-  @Router.patch("/forums/:forumId")
+  @Router.patch("/forums/:forumId/:forumTitle")
   async editForum(session: SessionDoc, forumId: string, title: string, description: string) {
     const user = Sessioning.getUser(session);
     const forumObjectId = new ObjectId(forumId);
@@ -286,7 +286,7 @@ class Routes {
     return { msg: "Forum title successfully updated!" };
   }
 
-  @Router.post("/forums/comments/:forumId")
+  @Router.post("/forums/comments/:forumId/:forumTitle")
   async addCommentToForum(session: SessionDoc, forumId: string, text: string) {
     const user = Sessioning.getUser(session);
     const forumObjectId = new ObjectId(forumId);
@@ -294,7 +294,7 @@ class Routes {
     return { msg: "Comment successfully added to forum!" };
   }
 
-  @Router.delete("/forums/comments/:forumId/:commentId")
+  @Router.delete("/forums/comments/:forumId/:forumTitle/:commentId")
   async deleteCommentFromForum(session: SessionDoc, forumId: string, commentId: string) {
     const user = Sessioning.getUser(session);
     const commentObjectId = new ObjectId(commentId);
@@ -315,14 +315,7 @@ class Routes {
     return Responses.forums(forums);
   }
 
-  @Router.get("/forums/:forumId")
-  async getForumTitleById(forumId: string) {
-    const forumObjectId = new ObjectId(forumId);
-    const name = await Foruming.getTitleById(forumObjectId);
-    return name;
-  }
-
-  @Router.get("/forums/comments/:forumId")
+  @Router.get("/forums/comments/:forumId/:forumTitle")
   async getComments(forumId: string) {
     const forumObjectId = new ObjectId(forumId);
     const comments = await Foruming.getCommentByForum(forumObjectId);

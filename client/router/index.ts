@@ -47,7 +47,7 @@ const router = createRouter({
       meta: { requiresAuth: true },
     },
     {
-      path: "/forums/comments/:forumId",
+      path: "/forums/comments/:forumId/:forumTitle",
       name: "Comments",
       component: CommentView,
       meta: { requiresAuth: true },

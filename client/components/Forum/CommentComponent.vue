@@ -11,10 +11,11 @@ const { currentUsername } = storeToRefs(useUserStore());
 
 const route = useRoute();
 const forumId = route.params.forumId as string;
+const forumTitle = route.params.forumTitle as string;
 
 const deleteCommentFromForum = async () => {
   try {
-    await fetchy(`/api/forums/comments/${forumId}/${props.comment._id}`, "DELETE");
+    await fetchy(`/api/forums/comments/${forumId}/${forumTitle}/${props.comment._id}`, "DELETE");
   } catch {
     return;
   }
