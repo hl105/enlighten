@@ -83,7 +83,7 @@ const images = ref([
           <div class="cards">
             <PrimeCard class="PrimeCard" toggleable :collapsed="true">
               <template #header>
-                <img alt="user header" src="/client/assets/images/default_profile.png" class="card-header-img" />
+                <img alt="user header" src="https://i.imgur.com/JfSn6Nx.png" class="card-header-img" />
               </template>
               <template #title>Forums</template>
               <template #subtitle>Find your people</template>
