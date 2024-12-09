@@ -149,21 +149,7 @@ textarea {
   resize: none;
 }
 
-button {
-  background-color: #063970;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 0.5em 1em;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  width: 13em;
-  margin-left: 25%;
-}
 
-button:hover {
-  background-color: #052b5c;
-}
 
 .use-location-button {
   background-color: #28a745;

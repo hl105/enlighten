@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import PostComponent from "@/components/Post/PostComponent.vue";
+import EditPostForm from "@/components/Post/EditPostForm.vue";
 import UserBadges from "@/components/Reward/UserBadges.vue";
 import router from "@/router";
 import { useUserStore } from "@/stores/user";
+import { usePostStore } from "@/stores/posts";
 import { fetchy } from "@/utils/fetchy";
 import { storeToRefs } from "pinia";
 import { onMounted, ref } from "vue";
@@ -13,6 +15,12 @@ interface Post {
 const { currentUsername } = storeToRefs(useUserStore());
 const { logoutUser, deleteUser } = useUserStore();
 const posts = ref<Post[]>([]);
+const editing = ref("");
+const postStore = usePostStore();
+
+function updateEditing(id: string) {
+  editing.value = id;
+}
 
 async function logout() {
   await logoutUser();
@@ -55,13 +63,20 @@ onMounted(async () => {
     <div class="posts">
       <h2>Posts</h2>
       <div class="post-grid">
-        <PostComponent v-for="post in posts" :key="post._id" :post="post" @refreshPosts="fetchUserPosts" class="post" />
+        <article v-for="post in posts" :key="post._id">
+          <PostComponent v-if="editing !== post._id" :post="post" @@refreshPosts="fetchUserPosts" class="post" @editPost="updateEditing" />
+          <EditPostForm v-else :post="post" @refreshPosts="postStore.fetchPosts" @editPost="updateEditing" />
+        </article>
+        <!-- <PostComponent v-for="post in posts" :key="post._id" :post="post" @refreshPosts="fetchUserPosts" class="post" /> -->
       </div>
     </div>
   </main>
 </template>
 
 <style scoped>
+h2 {
+  color: white;
+}
 .header {
   display: flex;
   flex-wrap: wrap;
