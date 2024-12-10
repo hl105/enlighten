@@ -64,8 +64,8 @@ onMounted(async () => {
       <h2>Posts</h2>
       <div class="post-grid">
         <article v-for="post in posts" :key="post._id">
-          <PostComponent v-if="editing !== post._id" :post="post" @@refreshPosts="fetchUserPosts" class="post" @editPost="updateEditing" />
-          <EditPostForm v-else :post="post" @refreshPosts="postStore.fetchPosts" @editPost="updateEditing" />
+          <PostComponent v-if="editing !== post._id" :post="post" @refreshPosts="fetchUserPosts" class="post" @editPost="updateEditing" />
+          <EditPostForm v-else :post="post" @refreshPosts="fetchUserPosts" @editPost="updateEditing" />
         </article>
         <!-- <PostComponent v-for="post in posts" :key="post._id" :post="post" @refreshPosts="fetchUserPosts" class="post" /> -->
       </div>
