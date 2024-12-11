@@ -67,7 +67,7 @@ onMounted(async () => {
 
 <style scoped>
 p {
-  color: white;
+  color: black;
 }
 .badges-container {
   margin: 2em auto;
