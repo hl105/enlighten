@@ -33,7 +33,7 @@ const toggleGuide = () => {
       <div>
         <div v-if="showGuide" class="guide">
           <h2>How to view:</h2>
-          <p>Use a compass and aim at <strong>{{ props.planetData.altitude }}</strong>.</p>
+          <p>Use a compass and aim at <strong>{{ props.planetData.azimuth}}</strong>.</p>
           <p v-if="props.planetData.nakedEyeObject == 'Yes'">
             Then look <strong>{{ props.planetData.altitude }}</strong> above the horizon.
           </p>
