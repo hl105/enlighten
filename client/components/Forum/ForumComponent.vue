@@ -30,12 +30,12 @@ const goToComments = async (forumId: string, forumTitle: string) => {
     <p class="forum-description">{{ "Description: " + props.forum.description }}</p>
     <div class="base">
       <menu>
-        <button class="btn-small pure-button" @click="goToComments(props.forum._id, props.forum.title)">Enter</button>
+        <button @click="goToComments(props.forum._id, props.forum.title)">Enter</button>
         <li v-if="props.forum.author == currentUsername">
-          <button class="btn-small pure-button" @click="emit('editForum', props.forum._id)">Edit Forum</button>
+          <button @click="emit('editForum', props.forum._id)">Edit Forum</button>
         </li>
         <li v-if="props.forum.author == currentUsername">
-          <button class="button-error btn-small pure-button" @click="deleteForum">Delete</button>
+          <button @click="deleteForum">Delete</button>
         </li>
       </menu>
       <article class="timestamp">
@@ -58,6 +58,23 @@ const goToComments = async (forumId: string, forumTitle: string) => {
     transform 0.3s ease,
     box-shadow 0.3s ease;
   color: white;
+}
+
+button {
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 13em;
+  margin-left: 25%;
+  font-family: "Catalina";
+}
+
+button:hover {
+  background-color: #b8b9bb;
 }
 
 img {

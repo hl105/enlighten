@@ -36,18 +36,21 @@ const emptyForm = () => {
     <label for="title">Title:</label>
     <textarea id="text" v-model="text" placeholder="Write your comment..." required></textarea>
 
-    <button type="submit" class="pure-button-primary pure-button">Create Comment</button>
+    <button type="submit">Create Comment</button>
   </form>
 </template>
 
 <style scoped>
 form {
-  background-color: var(--base-bg);
+  background: rgba(0, 0, 0, 0.5);
+  /* background-color: var(--base-bg); */
   border-radius: 1em;
   display: flex;
   flex-direction: column;
   gap: 0.5em;
   padding: 1em;
+  width: 30em;
+  color: white;
 }
 
 textarea,
@@ -61,5 +64,22 @@ input {
 textarea {
   height: 6em;
   resize: none;
+}
+
+button {
+  background-color: #063970;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 13em;
+  margin-left: 25%;
+  font-family: "Catalina";
+}
+
+button:hover {
+  background-color: #052b5c;
 }
 </style>

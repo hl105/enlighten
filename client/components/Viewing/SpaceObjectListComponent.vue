@@ -54,13 +54,19 @@ onBeforeMount(fetchSpaceObjects);
       <SpaceObjectComponent :planetData="object" />
     </article>
   </section>
-  <div v-else>
+  <div v-else class="alt-text">
     <p>Space objects loading... (takes ~10 seconds)</p>
     <p>If it is the first time try refreshing.</p>
   </div>
 </template>
 
 <style scoped>
+.alt-text{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 h1,
 p {
   color: white;

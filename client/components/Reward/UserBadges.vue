@@ -66,6 +66,9 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+p {
+  color: white;
+}
 .badges-container {
   margin: 2em auto;
   max-width: 800px;

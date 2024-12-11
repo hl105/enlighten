@@ -95,7 +95,6 @@ nav {
   font-size: 1.5em;
   text-align: center;
   margin: 0 auto;
-  flex-grow: 1;
   color: white;
 }
 
@@ -122,7 +121,7 @@ nav {
 .sidebar {
   position: fixed;
   left: 0;
-  height: 90%;
+  height: 100%;
   width: 200px;
   background-color: #063970;
   box-shadow: 2px 0 6px rgba(0, 0, 0, 0.1);

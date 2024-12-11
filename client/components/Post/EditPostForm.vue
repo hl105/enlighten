@@ -32,28 +32,35 @@ const editPost = async () => {
 
     <label for="hashtags">Hashtags (comma-separated):</label>
     <input id="hashtags" type="text" v-model="hashtags" placeholder="#sky,#observation" />
-
-    <div class="base">
-      <menu>
-        <li>
-          <button class="btn-small pure-button-primary pure-button" type="submit">Save</button>
-        </li>
-        <li>
-          <button class="btn-small pure-button" @click="emit('editPost')">Cancel</button>
-        </li>
-      </menu>
-      <p v-if="props.post.dateCreated !== props.post.dateUpdated" class="timestamp">Edited on: {{ formatDate(props.post.dateUpdated) }}</p>
-      <p v-else class="timestamp">Created on: {{ formatDate(props.post.dateCreated) }}</p>
+    <div class="edit-buttons">
+      <li>
+        <button type="submit">Save</button>
+      </li>
+      <li>
+        <button @click="emit('editPost')">Cancel</button>
+      </li>
     </div>
+    <p v-if="props.post.dateCreated !== props.post.dateUpdated" class="timestamp">Edited on: {{ formatDate(props.post.dateUpdated) }}</p>
+    <p v-else class="timestamp">Created on: {{ formatDate(props.post.dateCreated) }}</p>
   </form>
 </template>
 
 <style scoped>
+.edit-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
 form {
-  background-color: var(--base-bg);
+  background: rgba(0, 0, 0, 0.5);
+  /* background-color: var(--base-bg); */
+  border-radius: 1em;
   display: flex;
   flex-direction: column;
   gap: 0.5em;
+  padding: 1em;
+  width: 30em;
+  color: white;
 }
 
 textarea {
@@ -66,6 +73,22 @@ textarea {
 
 p {
   margin: 0em;
+}
+
+button:hover {
+  background-color: #052b5c;
+}
+
+button {
+  background-color: #063970;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0.5em 1em;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 13em;
+  margin-left: 25%;
 }
 
 .author {
@@ -82,11 +105,11 @@ menu {
   margin: 0;
 }
 
-.base {
+/* .base {
   display: flex;
   justify-content: space-between;
   align-items: center;
-}
+} */
 
 .timestamp {
   display: flex;

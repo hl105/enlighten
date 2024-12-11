@@ -34,18 +34,22 @@ onBeforeMount(async () => {
 </template>
 
 <style scoped>
+h1 {
+  color: white;
+}
 section {
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 1em;
 }
 
-section,
+/* section,
 p,
 .row {
   margin: 0 auto;
   max-width: 60em;
-}
+} */
 
 article {
   background-color: var(--base-bg);
@@ -57,13 +61,11 @@ article {
 }
 
 .comments {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5em;
+  margin: 2em auto;
   padding: 1em;
-}
-
-.row {
-  display: flex;
-  justify-content: space-between;
-  margin: 0 auto;
-  max-width: 60em;
+  max-width: 1200px;
 }
 </style>
