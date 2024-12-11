@@ -88,7 +88,7 @@ p {
   border: 2px solid #063970;
   border-radius: 5px;
   background: transparent;
-  color: #063970;
+  color: white;
   font-size: 1em;
   font-weight: bold;
   transition:
