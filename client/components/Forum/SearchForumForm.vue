@@ -17,7 +17,7 @@ const submitSearch = () => {
   <form @submit.prevent="submitSearch" class="pure-form">
     <fieldset>
       <legend>Search Forums</legend>
-      <input id="author" type="text" v-model="author" placeholder="Author Username" />
+      <input id="author" type="text" v-model="author" placeholder="Creator Username" />
       <input id="title" type="text" v-model="title" placeholder="Forum Title" />
       <button type="submit" class="pure-button pure-button-primary">Search</button>
     </fieldset>

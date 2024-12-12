@@ -283,7 +283,7 @@ class Routes {
     const user = Sessioning.getUser(session);
     const forumObjectId = new ObjectId(forumId);
     await Foruming.editForum(user, forumObjectId, title, description);
-    return { msg: "Forum title successfully updated!" };
+    return { msg: "Forum successfully updated!" };
   }
 
   @Router.post("/forums/comments/:forumId/:forumTitle")

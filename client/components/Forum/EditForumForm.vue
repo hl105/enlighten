@@ -11,7 +11,7 @@ const emit = defineEmits(["editForum", "refreshForums"]);
 
 const editForum = async () => {
   try {
-    await fetchy(`/api/forums/${props.forum._id}`, "PATCH", {
+    await fetchy(`/api/forums/${props.forum._id}/${props.forum.title}`, "PATCH", {
       body: {
         title: title.value,
         description: description.value,

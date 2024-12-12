@@ -47,7 +47,7 @@ export default class ForumingConcept {
    * Deletes a forum if the user is the author.
    */
   async deleteForum(user: ObjectId, forumId: ObjectId) {
-    await this.assertAuthorIsUser(forumId, user);
+    await this.assertAuthorIsUser(user, forumId);
     await this.forums.deleteOne({ _id: forumId });
     return { msg: "Forum deleted successfully!" };
   }
@@ -56,7 +56,7 @@ export default class ForumingConcept {
    * Edits a forum's title or description.
    */
   async editForum(user: ObjectId, forumId: ObjectId, title: string, description: string) {
-    await this.assertAuthorIsUser(forumId, user);
+    await this.assertAuthorIsUser(user, forumId);
     await this.forums.partialUpdateOne({ _id: forumId }, { title: title, description: description });
     return { msg: "Forum successfully updated!" };
   }
